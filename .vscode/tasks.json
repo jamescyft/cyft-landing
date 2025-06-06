@@ -1,0 +1,59 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🚀 Deploy to Vercel",
+      "type": "shell",
+      "command": "git add . && git commit -m \"${input:commitMessage}\" && git push",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "terminal"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "📦 Quick Deploy (auto-message)",
+      "type": "shell",
+      "command": "git add . && git commit -m \"Updated: $(date +'%Y-%m-%d %H:%M')\" && git push",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "terminal"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔨 Build Locally",
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "👀 Preview Locally",
+      "type": "npm",
+      "script": "dev",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "📊 Check Deploy Status",
+      "type": "shell",
+      "command": "open https://vercel.com/jamescyft/cyft-website",
+      "group": "none",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "commitMessage",
+      "type": "promptString",
+      "description": "Commit message for deployment",
+      "default": "Update content"
+    }
+  ]
+} 

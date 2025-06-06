@@ -1,0 +1,17 @@
+[
+  {
+    "key": "cmd+shift+d",
+    "command": "workbench.action.tasks.runTask",
+    "args": "🚀 Deploy to Vercel"
+  },
+  {
+    "key": "cmd+shift+q", 
+    "command": "workbench.action.tasks.runTask",
+    "args": "📦 Quick Deploy (auto-message)"
+  },
+  {
+    "key": "cmd+shift+p cmd+shift+p",
+    "command": "workbench.action.tasks.runTask", 
+    "args": "👀 Preview Locally"
+  }
+] 

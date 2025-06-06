@@ -14,7 +14,9 @@ build/
 .vite/
 
 # Editor directories and files
-.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/keybindings.json
 .idea/
 *.swp
 *.swo
@@ -81,8 +83,12 @@ Desktop.ini
 
 # Temporary setup files
 create-favicons.js
-deploy*.sh
-DEPLOYMENT_*.md
+deploy.sh
+deploy-with-git.sh
+!deploy-quick.sh
+!DEPLOYMENT_INFO.md
+DEPLOYMENT_COMPARISON.md
+DEPLOYMENT_SUMMARY.md
 QUICK_*.md
 GIT_*.md
 VERCEL_*.md
