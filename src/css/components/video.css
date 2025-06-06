@@ -1,0 +1,95 @@
+/**
+ * Video Component Styles
+ * Handles video backgrounds and overlays
+ * Maintains consistent styling with the rest of the codebase
+ */
+
+/* Video Background Container */
+.video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: var(--z-base);
+}
+
+/* Video Element */
+.video-background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Video Overlay for Text Readability */
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(250, 250, 250, 0.85);
+    z-index: var(--z-above);
+}
+
+/* Hide Ripple Animation When Video is Present */
+.section--hero.has-video .animated-background {
+    display: none;
+}
+
+/* Ensure Hero Content Stays Above Video */
+.section--hero.has-video .hero__content {
+    z-index: calc(var(--z-above) + 1);
+    position: relative;
+}
+
+/* Video Loading State */
+.video-background--loading {
+    background: var(--color-bg-light);
+}
+
+/* Video Error State */
+.video-background--error video {
+    display: none;
+}
+
+.video-background--error::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-bg-light);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .video-background video {
+        display: none;
+    }
+    
+    .video-background {
+        background: var(--color-bg-light);
+    }
+}
+
+/* Mobile Optimization - Disable Video on Small Screens */
+@media (max-width: 768px) {
+    .video-background video {
+        display: none;
+    }
+    
+    .video-background {
+        background: var(--color-bg-light);
+    }
+    
+    /* Show ripple animation instead on mobile */
+    .section--hero.has-video .animated-background {
+        display: block;
+    }
+} 

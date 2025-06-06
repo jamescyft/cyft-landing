@@ -1,0 +1,228 @@
+/**
+ * Button Components
+ * Reusable button styles with consistent states
+ */
+
+@import '../variables.css';
+
+/* Base Button Styles */
+.btn {
+  display: inline-block;
+  padding: var(--space-3) var(--space-8);
+  background: transparent;
+  color: var(--color-black-pure);
+  text-decoration: none;
+  font-weight: var(--font-weight-light);
+  font-size: var(--font-size-base);
+  letter-spacing: var(--letter-spacing-loose);
+  transition: all var(--transition-base);
+  border: var(--border-width-thin) solid var(--color-black-pure);
+  border-radius: 0;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button States */
+.btn:hover {
+  background: var(--color-black-pure);
+  color: var(--color-white-pure);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn:focus {
+  outline: var(--focus-visible-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.btn:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.btn:disabled,
+.btn.is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Button Sizes */
+.btn--small {
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--font-size-small);
+}
+
+.btn--large {
+  padding: var(--space-4) var(--space-10);
+  font-size: var(--font-size-body);
+}
+
+/* Button Variants */
+.btn--primary {
+  background: var(--color-black-pure);
+  color: var(--color-white-pure);
+  border-color: var(--color-black-pure);
+}
+
+.btn--primary:hover {
+  background: transparent;
+  color: var(--color-black-pure);
+}
+
+.btn--white {
+  background: transparent;
+  color: var(--color-white-pure);
+  border-color: var(--color-white-pure);
+}
+
+.btn--white:hover {
+  background: var(--color-white-pure);
+  color: var(--color-black-pure);
+}
+
+.btn--ghost {
+  border: none;
+  padding: var(--space-2) var(--space-4);
+}
+
+.btn--ghost:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-black-pure);
+}
+
+/* Full Width Button */
+.btn--full {
+  width: 100%;
+  display: block;
+}
+
+/* Loading State */
+.btn.is-loading {
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn.is-loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid var(--color-bg-secondary);
+  border-radius: 50%;
+  border-top-color: var(--color-black-pure);
+  animation: spin 1s linear infinite;
+}
+
+.btn--primary.is-loading::after {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: var(--color-white-pure);
+}
+
+/* Icon Button */
+.btn--icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.btn__icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Circular Button (for mic, etc.) */
+.btn--circle {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-circle);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn--circle:hover {
+  transform: scale(1.05);
+}
+
+.btn--circle:active {
+  transform: scale(0.98);
+}
+
+.btn--circle .btn__icon {
+  width: 60px;
+  height: 60px;
+}
+
+/* Ripple Effect Container */
+.btn__ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: var(--radius-circle);
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Button Group */
+.btn-group {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-group--center {
+  justify-content: center;
+}
+
+.btn-group--end {
+  justify-content: flex-end;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .btn {
+    padding: var(--space-3) var(--space-6);
+  }
+  
+  .btn--large {
+    padding: var(--space-3) var(--space-8);
+  }
+  
+  .btn-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-group .btn {
+    width: 100%;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .btn {
+    display: none;
+  }
+} 

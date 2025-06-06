@@ -1,0 +1,34 @@
+/**
+ * Main CSS Entry Point
+ * Imports all CSS modules in the correct order
+ * Order matters: variables → base → utilities → animations → components
+ */
+
+/* Design Tokens and Variables */
+@import './variables.css';
+
+/* Base Styles and Reset */
+@import './base.css';
+
+/* Utility Classes */
+@import './utilities.css';
+
+/* Animation Definitions */
+@import './animations.css';
+
+/* Component Styles */
+@import './components/sections.css';
+@import './components/buttons.css';
+@import './components/forms.css';
+@import './components/interactive-demo.css';
+@import './components/video.css';
+
+/* Additional component styles can be added here */
+/* @import './components/footer.css'; */
+/* @import './components/navigation.css'; */
+
+/* Page-specific styles (if needed) */
+/* @import './pages/home.css'; */
+
+/* Vendor overrides (if needed) */
+/* @import './vendor-overrides.css'; */ 
