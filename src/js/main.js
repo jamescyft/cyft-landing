@@ -3,6 +3,9 @@
  * Initializes all modules and manages application lifecycle
  */
 
+// Import CSS - This ensures proper bundling with Vite
+import '../css/main.css';
+
 import { ready, $$, scrollTo } from './utils/dom.js';
 import { createFormValidator } from './modules/form-validator.js';
 import { createInteractiveDemo } from './modules/interactive-demo.js';
