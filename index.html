@@ -90,13 +90,17 @@
                 <div class="video-overlay"></div>
             </div>
             
+            <!-- Cyft Branding -->
+            <div class="hero__branding">
+                <span class="hero__brand-name">Cyft</span>
+            </div>
+            
             <div class="hero__content">
                 <h1 class="hero__title">
-                    The Death of Documentation
+                    Documentation isn't the work
                 </h1>
                 <p class="hero__subtitle">
-                    Your techs aren't human APIs. Legacy vendors just forgot that.<br>
-                    Documentation as you know it? Dead. And it's about time.
+                    It's the clean, automatic byproduct.
                 </p>
             </div>
         </section>
@@ -277,7 +281,7 @@
         </section>
 
         <!-- Demo Form Section -->
-        <section class="section section--demo-form" id="demo-form" aria-label="Request a demo">
+        <section class="section section--demo-form" id="demo-form" aria-label="Request an invitation">
             <div class="demo-form__container">
                 <div class="demo-form__header">
                     <h2 class="demo-form__title">See a demo</h2>
@@ -337,13 +341,42 @@
                     </div>
                     
                     <button type="submit" class="btn btn--primary btn--full btn--large">
-                        Request demo
+                        Request invitation
                     </button>
                 </form>
                 
-                <div id="form-success" class="form__success u-mt-6">
-                    <h3 class="form__success-title">Thank you.</h3>
-                    <p class="form__success-text">We'll be in touch soon.</p>
+                <!-- Success Sequence -->
+                <div id="form-success" class="form-success-sequence u-mt-6">
+                    <!-- Initial Success Message -->
+                    <div id="success-initial" class="success-step success-step--initial">
+                        <h3 class="success-title">Your invitation will be sent within 24 hours.</h3>
+                        
+                        <!-- Friend Invitation -->
+                        <div class="success-friend-section">
+                            <p class="success-friend-prompt">Want to bring a friend?</p>
+                            <form id="friend-invite-form" class="friend-invite-form">
+                                <div class="friend-invite-input-group">
+                                    <input 
+                                        type="email" 
+                                        id="friend-email" 
+                                        name="friend-email" 
+                                        class="form__input friend-email-input" 
+                                        placeholder="Friend's email"
+                                        aria-label="Friend's email address"
+                                    >
+                                    <button type="submit" class="btn btn--secondary btn--compact">
+                                        Invite
+                                    </button>
+                                </div>
+                                <span class="form__error" role="alert"></span>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Friend Invitation Success -->
+                    <div id="success-friend" class="success-step success-step--friend">
+                        <h3 class="success-title">Perfect. We'll add them to your invitation.</h3>
+                    </div>
                 </div>
             </div>
         </section>

@@ -12,7 +12,8 @@
     "lint": "npm run lint:css && npm run lint:js",
     "format": "prettier --write .",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:sheets": "node test-google-sheets.js"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

@@ -7,6 +7,7 @@
 import { ENV, getApiUrl } from '../config/environment.js';
 import { logger } from '../utils/logger.js';
 import { TIMEOUTS } from '../config/constants.js';
+import { googleSheetsService } from './google-sheets.service.js';
 
 /**
  * API Service Class
@@ -73,15 +74,37 @@ export class ApiService {
    * @returns {Promise<Object>}
    */
   async submitDemoRequest(formData) {
-    if (ENV.isDev) {
-      logger.debug('Dev mode: Mocking demo request submission');
-      return this.mockSubmitDemoRequest(formData);
-    }
+    try {
+      // Submit to Google Sheets if enabled
+      if (ENV.googleSheets.enabled) {
+        const sheetsPromise = googleSheetsService.submitDemoRequest(formData)
+          .catch(error => {
+            logger.error('Google Sheets submission failed:', error);
+            // Don't fail the whole request if Google Sheets fails
+            return { success: false, error };
+          });
+        
+        // Don't wait for Google Sheets in production to avoid delays
+        if (!ENV.isDev) {
+          sheetsPromise.then(result => {
+            logger.info('Google Sheets submission result:', result);
+          });
+        }
+      }
+      
+      if (ENV.isDev) {
+        logger.debug('Dev mode: Mocking demo request submission');
+        return this.mockSubmitDemoRequest(formData);
+      }
 
-    return this.request('/demo-request', {
-      method: 'POST',
-      body: JSON.stringify(formData)
-    });
+      return this.request('/demo-request', {
+        method: 'POST',
+        body: JSON.stringify(formData)
+      });
+    } catch (error) {
+      logger.error('Demo request submission failed:', error);
+      throw error;
+    }
   }
 
   /**
@@ -98,6 +121,64 @@ export class ApiService {
       data: {
         id: Math.random().toString(36).substr(2, 9),
         ...formData,
+        timestamp: new Date().toISOString()
+      }
+    };
+  }
+
+  /**
+   * Submit friend invitation
+   * @param {Object} inviteData - Invitation data containing email
+   * @returns {Promise<Object>}
+   */
+  async submitFriendInvitation(inviteData) {
+    try {
+      // Submit to Google Sheets if enabled
+      if (ENV.googleSheets.enabled) {
+        const sheetsPromise = googleSheetsService.submitFriendInvitation(inviteData)
+          .catch(error => {
+            logger.error('Google Sheets submission failed:', error);
+            // Don't fail the whole request if Google Sheets fails
+            return { success: false, error };
+          });
+        
+        // Don't wait for Google Sheets in production to avoid delays
+        if (!ENV.isDev) {
+          sheetsPromise.then(result => {
+            logger.info('Google Sheets submission result:', result);
+          });
+        }
+      }
+      
+      if (ENV.isDev) {
+        logger.debug('Dev mode: Mocking friend invitation submission');
+        return this.mockSubmitFriendInvitation(inviteData);
+      }
+
+      return this.request('/friend-invitation', {
+        method: 'POST',
+        body: JSON.stringify(inviteData)
+      });
+    } catch (error) {
+      logger.error('Friend invitation submission failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Mock friend invitation submission for development
+   * @param {Object} inviteData - Invitation data
+   * @returns {Promise<Object>}
+   */
+  async mockSubmitFriendInvitation(inviteData) {
+    await this.wait(1500); // Shorter wait for friend invitations
+    
+    return {
+      success: true,
+      message: 'Friend invitation sent',
+      data: {
+        id: Math.random().toString(36).substr(2, 9),
+        ...inviteData,
         timestamp: new Date().toISOString()
       }
     };
@@ -142,5 +223,6 @@ export const apiService = new ApiService();
 
 // Export convenience methods
 export const submitDemoRequest = (formData) => apiService.submitDemoRequest(formData);
+export const submitFriendInvitation = (inviteData) => apiService.submitFriendInvitation(inviteData);
 export const getDemoScenarios = () => apiService.getDemoScenarios();
 export const healthCheck = () => apiService.healthCheck(); 

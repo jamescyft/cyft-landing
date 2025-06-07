@@ -37,6 +37,12 @@ export const ENV = {
       sentry: import.meta.env?.VITE_SENTRY_DSN || '',
       logRocket: import.meta.env?.VITE_LOGROCKET_ID || ''
     }
+  },
+  
+  // Google Sheets integration
+  googleSheets: {
+    enabled: import.meta.env?.VITE_GOOGLE_SHEETS_ENABLED === 'true',
+    scriptUrl: import.meta.env?.VITE_GOOGLE_SHEETS_SCRIPT_URL || ''
   }
 };
 
@@ -47,6 +53,7 @@ Object.freeze(ENV.features);
 Object.freeze(ENV.services);
 Object.freeze(ENV.services.analytics);
 Object.freeze(ENV.services.errorTracking);
+Object.freeze(ENV.googleSheets);
 
 /**
  * Check if a feature is enabled

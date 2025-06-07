@@ -154,6 +154,7 @@ class Application {
     const form = event.target;
     const submitButton = form.querySelector('button[type="submit"]');
     const formSuccess = document.getElementById('form-success');
+    const successInitial = document.getElementById('success-initial');
     
     try {
       // Show loading state
@@ -166,13 +167,9 @@ class Application {
       // Submit via API service
       const result = await apiService.submitDemoRequest(formData);
       
-      // Show success message
-      if (form && formSuccess) {
-        form.style.display = 'none';
-        formSuccess.style.display = 'block';
-        
-        // Scroll to success message
-        scrollTo(formSuccess, { block: 'center' });
+      // Animate form out and success in
+      if (form && formSuccess && successInitial) {
+        await this.showSuccessSequence(form, formSuccess, successInitial);
       }
       
       // Track conversion
@@ -183,6 +180,9 @@ class Application {
       
       // Store in localStorage for persistence
       this.storeDemoRequest(formData);
+      
+      // Setup friend invitation form
+      this.setupFriendInviteForm();
       
     } catch (error) {
       // Show error message
@@ -198,10 +198,159 @@ class Application {
       // Reset button state
       if (submitButton) {
         submitButton.disabled = false;
-        submitButton.textContent = 'Request demo';
+        submitButton.textContent = 'Request invitation';
         submitButton.classList.remove('is-loading');
       }
     }
+  }
+
+  /**
+   * Show the success sequence with animations
+   * @param {HTMLElement} form - The original form
+   * @param {HTMLElement} formSuccess - The success container
+   * @param {HTMLElement} successInitial - The initial success step
+   */
+  async showSuccessSequence(form, formSuccess, successInitial) {
+    return new Promise((resolve) => {
+      // Also hide the form header
+      const formHeader = document.querySelector('.demo-form__header');
+      
+      // Hide the form and header with animation
+      form.classList.add('is-hiding');
+      if (formHeader) {
+        formHeader.classList.add('is-hiding');
+      }
+      
+      // After form animation completes, show success
+      setTimeout(() => {
+        form.style.display = 'none';
+        if (formHeader) {
+          formHeader.style.display = 'none';
+        }
+        formSuccess.classList.add('is-visible');
+        successInitial.classList.add('is-active', 'is-entering');
+        
+        // Scroll to success message
+        scrollTo(formSuccess, { block: 'center' });
+        
+        resolve();
+      }, 300); // Match the form-hide animation duration
+    });
+  }
+
+  /**
+   * Setup friend invitation form
+   */
+  setupFriendInviteForm() {
+    const friendForm = document.getElementById('friend-invite-form');
+    const friendEmailInput = document.getElementById('friend-email');
+    
+    if (friendForm && friendEmailInput) {
+      friendForm.addEventListener('submit', this.handleFriendInvite.bind(this));
+      
+      // Simple email validation for friend input
+      friendEmailInput.addEventListener('blur', () => {
+        const email = friendEmailInput.value.trim();
+        const errorElement = friendForm.querySelector('.form__error');
+        
+        if (email && !this.isValidEmail(email)) {
+          friendEmailInput.classList.add('has-error');
+          errorElement.textContent = 'Please enter a valid email address';
+        } else {
+          friendEmailInput.classList.remove('has-error');
+          errorElement.textContent = '';
+        }
+      });
+    }
+  }
+
+  /**
+   * Handle friend invitation submission
+   * @param {Event} event - Form submit event
+   */
+  async handleFriendInvite(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const emailInput = form.querySelector('#friend-email');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const errorElement = form.querySelector('.form__error');
+    const email = emailInput.value.trim();
+    
+    // Validate email
+    if (!email || !this.isValidEmail(email)) {
+      emailInput.classList.add('has-error');
+      errorElement.textContent = 'Please enter a valid email address';
+      return;
+    }
+    
+    try {
+      // Show loading state
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending...';
+      submitButton.classList.add('is-loading');
+      
+      // Submit friend invitation
+      await apiService.submitFriendInvitation({ email });
+      
+      // Show friend success step
+      await this.showFriendSuccess();
+      
+      // Track friend invitation
+      analyticsService.trackEvent('friend_invitation', { email });
+      
+    } catch (error) {
+      errorElement.textContent = 'Failed to send invitation. Please try again.';
+      errorTracker.captureError(error, { 
+        phase: 'friend_invitation',
+        email 
+      });
+    } finally {
+      // Reset button state
+      submitButton.disabled = false;
+      submitButton.textContent = 'Invite';
+      submitButton.classList.remove('is-loading');
+    }
+  }
+
+  /**
+   * Show friend invitation success
+   */
+  async showFriendSuccess() {
+    const successInitial = document.getElementById('success-initial');
+    const successFriend = document.getElementById('success-friend');
+    
+    if (successInitial && successFriend) {
+      return new Promise((resolve) => {
+        // Start the transition by fading out initial success
+        successInitial.classList.add('is-exiting');
+        
+        // Immediately start preparing the friend success (but keep it hidden)
+        successFriend.classList.remove('is-active');
+        successFriend.style.opacity = '0';
+        
+        setTimeout(() => {
+          // Remove initial success from view
+          successInitial.classList.remove('is-active', 'is-entering');
+          
+          // Activate friend success and animate it in
+          successFriend.classList.add('is-active', 'is-entering');
+          successFriend.style.opacity = '';
+          
+          resolve();
+        }, 200); // Slightly faster transition
+      });
+    }
+  }
+
+  /**
+   * Validate email format
+   * @param {string} email - Email to validate
+   * @returns {boolean} - Whether email is valid
+   */
+  isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
   
   /**

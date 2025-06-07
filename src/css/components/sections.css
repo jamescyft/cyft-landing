@@ -69,6 +69,25 @@
   overflow: hidden;
 }
 
+/* Hero Branding */
+.hero__branding {
+  position: absolute;
+  top: var(--space-9);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-above);
+}
+
+.hero__brand-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-widest);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: simple-fade-in 2s ease-out 1s forwards;
+}
+
 .hero__content {
   text-align: center;
   z-index: var(--z-above);
@@ -274,6 +293,14 @@
 @media (max-width: 768px) {
   .section {
     padding: var(--space-section-mobile) 6vw;
+  }
+  
+  .hero__branding {
+    top: var(--space-6);
+  }
+  
+  .hero__brand-name {
+    font-size: var(--font-size-xs);
   }
   
   .hero__title {

@@ -246,6 +246,38 @@ Each module manages its own state. Never store state in global scope.
 - Consistent timing functions
 - Respects user preferences
 
+## 📊 Google Sheets Integration
+
+### Overview
+The landing page supports automatic lead capture to Google Sheets via Google Apps Script.
+
+### Quick Setup
+1. **Create a Google Sheet** with columns for lead data
+2. **Deploy Google Apps Script** (see `google-sheets-setup.md` for detailed instructions)
+3. **Configure environment variables**:
+   ```env
+   VITE_GOOGLE_SHEETS_ENABLED=true
+   VITE_GOOGLE_SHEETS_SCRIPT_URL=your_script_url_here
+   ```
+4. **Test the integration**:
+   ```bash
+   npm run test:sheets
+   ```
+
+### Features
+- Automatic form submission to Google Sheets
+- Captures both demo requests and friend invitations
+- Includes metadata (timestamp, source, referrer)
+- Non-blocking (doesn't delay form submission)
+- Error resilient (form still works if Sheets fails)
+
+### Data Captured
+- **Demo Form**: Name, Email, Company, Tech Stack
+- **Friend Form**: Email
+- **Metadata**: Timestamp, Source, Referrer, User Agent
+
+For detailed setup instructions, see `google-sheets-setup.md`.
+
 ## 📝 License
 
 Proprietary - Cyft 2025
