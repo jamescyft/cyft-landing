@@ -1,567 +1,534 @@
 /**
- * Interactive Demo Module
- * Manages the demo interaction flow with clean state management
+ * Interactive Demo - Refined Narrative Implementation
+ * Smooth transitions, natural flow, elegant reveals
  */
 
 import { DEMO_SCENARIOS } from '../../config/scenarios.js';
-import { DEMO_CONFIG, ANIMATION_TIMING, TIMEOUTS, ANIMATION_DELAYS } from '../../config/constants.js';
-import { $, $$, on, show, hide, addClass, removeClass, createElement } from '../utils/dom.js';
-import { logger } from '../utils/logger.js';
 
-/**
- * InteractiveDemo Class
- * Handles the entire demo flow and state
- */
 export class InteractiveDemo {
   constructor(containerId) {
-    this.container = $(containerId);
-    if (!this.container) {
-      throw new Error(`Demo container not found: ${containerId}`);
-    }
+    this.container = document.querySelector(containerId);
+    if (!this.container) return;
     
-    // State management
     this.state = {
       isRunning: false,
-      currentScenarioIndex: 0,
-      currentStep: 'idle',
-      animationTimeouts: []
+      currentScenarioIndex: 0
     };
     
-    // DOM element references
     this.elements = {
-      micButton: null,
-      voiceInputSection: null,
-      splitViewSection: null,
-      transcriptText: null,
-      typicalNotes: null,
-      docContent: null,
-      processingIndicator: null,
-      syncIndicators: null,
-      resetButton: null,
-      infoGain: null,
-      infoGainContent: null
+      micButton: document.querySelector('#mic-button'),
+      voiceSection: document.querySelector('#voice-input-section'),
+      splitView: document.querySelector('#split-view-section'),
+      typingContent: document.querySelector('#typical-notes'),
+      speechContent: document.querySelector('#transcript-text'),
+      voiceBars: document.querySelectorAll('.voice-bar'),
+      processingArea: document.querySelector('.demo__processing'),
+      docOutput: document.querySelector('#doc-output'),
+      docContent: document.querySelector('#doc-content'),
+      resetSection: document.querySelector('#reset-section'),
+      resetButton: document.querySelector('#reset-demo')
     };
     
     this.init();
   }
   
-  /**
-   * Initialize the demo
-   */
   init() {
-    this.cacheElements();
-    this.setupEventListeners();
-  }
-  
-  /**
-   * Cache DOM element references
-   */
-  cacheElements() {
-    this.elements = {
-      micButton: $('#mic-button'),
-      voiceInputSection: $('#voice-input-section'),
-      splitViewSection: $('#split-view-section'),
-      transcriptText: $('#transcript-text'),
-      typicalNotes: $('#typical-notes'),
-      docContent: $('#doc-content'),
-      processingIndicator: $('#processing-indicator'),
-      syncIndicators: $('#sync-indicators'),
-      resetButton: $('#reset-demo'),
-      resetSection: $('#reset-section'),
-      infoGain: $('#info-gain'),
-      infoGainContent: $('#info-gain-content'),
-      ripple: $('.btn__ripple', this.elements.micButton)
-    };
-    
-    // Validate required elements
-    const requiredElements = ['micButton', 'voiceInputSection', 'splitViewSection'];
-    requiredElements.forEach(key => {
-      if (!this.elements[key]) {
-        logger.error(`Required element not found: ${key}`);
-      }
-    });
-  }
-  
-  /**
-   * Setup event listeners
-   */
-  setupEventListeners() {
     if (this.elements.micButton) {
-      on(this.elements.micButton, 'click', () => this.startDemo());
+      this.elements.micButton.addEventListener('click', () => this.start());
     }
     
     if (this.elements.resetButton) {
-      on(this.elements.resetButton, 'click', () => this.resetDemo());
+      this.elements.resetButton.addEventListener('click', () => this.reset());
     }
   }
   
-  /**
-   * Start the demo flow
-   */
-  startDemo() {
+  start() {
     if (this.state.isRunning) return;
     
     this.state.isRunning = true;
     const scenario = DEMO_SCENARIOS[this.state.currentScenarioIndex];
     
-    // Add active state to mic button for pulse animation
-    addClass(this.elements.micButton, 'is-active');
+    // Smooth fade out of voice section
+    this.elements.voiceSection.style.transition = 'opacity 0.4s ease-out';
+    this.elements.voiceSection.style.opacity = '0';
     
-    // Trigger ripple animation
-    this.animateRipple();
-    
-    // Smooth transition to split view
     setTimeout(() => {
-      // Fade out voice input section
-      this.elements.voiceInputSection.style.opacity = '0';
-      this.elements.voiceInputSection.style.transform = 'scale(0.95)';
+      this.elements.voiceSection.style.display = 'none';
+      this.elements.splitView.classList.add('is-visible');
       
+      // Start the narrative after split view is visible
       setTimeout(() => {
-        hide(this.elements.voiceInputSection);
-        removeClass(this.elements.micButton, 'is-active');
-        
-        // Show split view with animation
-        this.elements.splitViewSection.style.display = 'block';
-        this.elements.splitViewSection.style.opacity = '0';
-        
-        // Force reflow
-        void this.elements.splitViewSection.offsetHeight;
-        
-        // Fade in split view
-        requestAnimationFrame(() => {
-          this.elements.splitViewSection.style.transition = 'opacity 0.6s ease-out';
-          this.elements.splitViewSection.style.opacity = '1';
-          addClass(this.elements.splitViewSection, 'is-visible');
-        });
-        
-        // Start the scenario
-        this.runScenario(scenario);
-      }, 300);
-    }, TIMEOUTS.rippleAnimation);
+        this.runNarrative(scenario);
+      }, 400);
+    }, 400);
   }
   
-  /**
-   * Run a demo scenario
-   * @param {Object} scenario - Scenario configuration
-   */
-  async runScenario(scenario) {
-    // Reset content
-    this.resetContent();
+  async runNarrative(scenario) {
+    // Hide processing text during typing phase
+    this.elements.processingArea.style.opacity = '0';
     
-    // Start typing typical notes with smoother timing
-    await this.wait(300); // Small delay for visual flow
-    await this.typeText(
-      scenario.typicalNotes,
-      this.elements.typicalNotes,
-      DEMO_CONFIG.typingSpeed.typical
-    );
+    // Act 1: Manual typing (simplified without timer)
+    await this.actOne_ManualTyping(scenario);
     
-    // Wait before transcript
-    await this.wait(DEMO_CONFIG.delays.beforeTranscript);
+    // Smooth transition pause
+    await this.wait(800);
     
-    // Start typing transcript
-    await this.typeText(
-      scenario.naturalSpeech,
-      this.elements.transcriptText,
-      DEMO_CONFIG.typingSpeed.transcript
-    );
+    // Act 2: Natural speech
+    await this.actTwo_NaturalSpeech(scenario);
     
-    // Animate voice waves while transcript is typing
-    this.animateVoiceWaves();
+    // Processing pause
+    await this.wait(600);
     
-    // Wait before documentation
-    await this.wait(DEMO_CONFIG.delays.beforeDocumentation);
+    // Act 3: AI understanding
+    await this.actThree_Understanding(scenario);
     
-    // Generate documentation
-    await this.generateDocumentation(scenario);
-    
-    // Show completion UI
-    this.showCompletionUI(scenario);
-  }
-  
-  /**
-   * Type text with animation
-   * @param {string} text - Text to type
-   * @param {Element} element - Target element
-   * @param {number} speed - Typing speed in ms
-   * @returns {Promise}
-   */
-  typeText(text, element, speed) {
-    return new Promise(resolve => {
-      if (!element) {
-        resolve();
-        return;
-      }
-      
-      element.innerHTML = '';
-      let index = 0;
-      
-      const type = () => {
-        if (index < text.length) {
-          // Add character with smooth cursor effect
-          const char = text.charAt(index);
-          element.innerHTML += char;
-          
-          // Add typing cursor effect
-          if (index === text.length - 1) {
-            element.innerHTML += '<span class="typing-cursor">|</span>';
-            setTimeout(() => {
-              const cursor = element.querySelector('.typing-cursor');
-              if (cursor) cursor.remove();
-            }, 500);
-          }
-          
-          index++;
-          
-          // Variable typing speed for more natural effect
-          const nextDelay = speed + (Math.random() * 30 - 15);
-          this.state.animationTimeouts.push(
-            setTimeout(type, nextDelay)
-          );
-        } else {
-          resolve();
-        }
-      };
-      
-      type();
-    });
-  }
-  
-  /**
-   * Animate voice waves
-   */
-  animateVoiceWaves() {
-    const waves = $$('.a-voice-wave');
-    waves.forEach(wave => {
-      addClass(wave, 'is-active');
-    });
-    
-    // Stop animation after transcript is done
+    // Show reset after completion
     setTimeout(() => {
-      waves.forEach(wave => {
-        removeClass(wave, 'is-active');
-      });
-    }, 5000);
-  }
-  
-  /**
-   * Generate documentation with animations
-   * @param {Object} scenario - Scenario configuration
-   */
-  async generateDocumentation(scenario) {
-    const doc = scenario.documentation;
-    
-    // Smooth transition from processing to content
-    this.elements.processingIndicator.style.opacity = '0';
-    setTimeout(() => {
-      hide(this.elements.processingIndicator);
-      addClass(this.elements.docContent, 'is-visible');
-    }, 300);
-    
-    // Build documentation HTML
-    const docElements = [];
-    
-    // Title
-    docElements.push(
-      createElement('h4', {
-        classes: ['doc-title', 'a-doc-line'],
-        text: doc.title
-      })
-    );
-    
-    // Sections
-    doc.sections.forEach(section => {
-      if (section.heading) {
-        const header = createElement('h5', {
-          classes: ['doc-section-header', 'a-doc-line'],
-          text: section.heading
-        });
-        docElements.push(header);
-        
-        // Highlight section headers briefly
-        setTimeout(() => {
-          addClass(header, 'is-highlighted');
-          setTimeout(() => {
-            removeClass(header, 'is-highlighted');
-          }, 1000);
-        }, 500);
-      }
-      
-      if (section.content) {
-        docElements.push(
-          createElement('p', {
-            classes: ['doc-content', 'a-doc-line'],
-            text: section.content
-          })
-        );
-      }
-      
-      if (section.items) {
-        const list = createElement('ul', {
-          classes: ['doc-list']
-        });
-        
-        section.items.forEach(item => {
-          list.appendChild(
-            createElement('li', {
-              classes: ['doc-list-item', 'a-doc-line'],
-              text: item
-            })
-          );
-        });
-        
-        docElements.push(list);
-      }
-    });
-    
-    // Add success message if resolution section exists
-    const resolutionSection = doc.sections.find(s => 
-      s.type === 'resolution' || s.type === 'results'
-    );
-    
-    if (resolutionSection) {
-      docElements.push(
-        createElement('div', {
-          classes: ['doc-success', 'a-success-pulse'],
-          children: [
-            createElement('p', {
-              classes: ['success-message'],
-              text: resolutionSection.content
-            })
-          ]
-        })
-      );
-    }
-    
-    // Clear and append all elements
-    this.elements.docContent.innerHTML = '';
-    
-    // Append elements with staggered animation
-    for (let i = 0; i < docElements.length; i++) {
-      const element = docElements[i];
-      element.style.opacity = '0';
-      element.style.transform = 'translateY(10px)';
-      this.elements.docContent.appendChild(element);
-      
-      await this.wait(100); // Stagger each element
-      
-      requestAnimationFrame(() => {
-        element.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
-        element.style.opacity = '1';
-        element.style.transform = 'translateY(0)';
-      });
-    }
-    
-    // Wait for animations to complete
-    await this.wait(500);
-  }
-  
-  /**
-   * Show completion UI elements
-   * @param {Object} scenario - Scenario configuration
-   */
-  showCompletionUI(scenario) {
-    // Show information gain with smooth animation
-    if (scenario.informationGain && this.elements.infoGain) {
-      this.elements.infoGain.style.display = 'block';
-      this.elements.infoGain.style.opacity = '0';
-      
-      requestAnimationFrame(() => {
-        this.elements.infoGain.style.transition = 'opacity 0.6s ease-out';
-        this.elements.infoGain.style.opacity = '1';
-      });
-      
-      // Populate content with staggered items
-      this.elements.infoGainContent.innerHTML = '';
-      scenario.informationGain.forEach((item, index) => {
-        setTimeout(() => {
-          const p = createElement('p', {
-            classes: ['info-gain-item'],
-            text: item.description
-          });
-          p.style.opacity = '0';
-          p.style.transform = 'translateX(-10px)';
-          this.elements.infoGainContent.appendChild(p);
-          
-          requestAnimationFrame(() => {
-            p.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
-            p.style.opacity = '1';
-            p.style.transform = 'translateX(0)';
-          });
-        }, index * 150);
-      });
-    }
-    
-    // Show sync indicators with improved animation
-    if (this.elements.syncIndicators) {
-      setTimeout(() => {
-        addClass(this.elements.syncIndicators, 'is-visible');
-        
-        const syncCards = $$('.demo__sync-card', this.elements.syncIndicators);
-        syncCards.forEach((card, index) => {
-          setTimeout(() => {
-            addClass(card, 'is-visible');
-          }, index * 150);
-        });
-      }, 800);
-    }
-    
-    // Show reset button
-    if (this.elements.resetSection) {
-      setTimeout(() => {
-        addClass(this.elements.resetSection, 'is-visible');
-      }, 1500);
-    }
+      this.elements.resetSection.classList.add('is-visible');
+    }, 1000);
     
     this.state.isRunning = false;
   }
   
   /**
-   * Reset demo to initial state
+   * Act 1: Manual Typing - Show the old way (no timer, just typing)
    */
-  resetDemo() {
-    // Clear all timeouts
-    this.state.animationTimeouts.forEach(timeout => clearTimeout(timeout));
-    this.state.animationTimeouts = [];
+  async actOne_ManualTyping(scenario) {
+    const text = scenario.typicalNotes;
+    const words = text.split(' ');
+    this.elements.typingContent.innerHTML = '<span class="demo__cursor">|</span>';
     
-    // Update scenario index
-    this.state.currentScenarioIndex = 
-      (this.state.currentScenarioIndex + 1) % DEMO_SCENARIOS.length;
-    
-    // Smooth transition back to initial state
-    this.elements.splitViewSection.style.opacity = '0';
-    
-    setTimeout(() => {
-      // Reset UI
-      hide(this.elements.splitViewSection);
-      removeClass(this.elements.splitViewSection, 'is-visible');
+    // Type each word with natural variation
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
       
-      this.elements.voiceInputSection.style.display = 'flex';
-      this.elements.voiceInputSection.style.opacity = '0';
-      this.elements.voiceInputSection.style.transform = 'scale(1.05)';
-      
-      requestAnimationFrame(() => {
-        this.elements.voiceInputSection.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
-        this.elements.voiceInputSection.style.opacity = '1';
-        this.elements.voiceInputSection.style.transform = 'scale(1)';
-      });
-      
-      // Reset content
-      this.resetContent();
-      
-      // Reset visibility classes
-      removeClass(this.elements.resetSection, 'is-visible');
-      removeClass(this.elements.syncIndicators, 'is-visible');
-      removeClass(this.elements.docContent, 'is-visible');
-      
-      if (this.elements.infoGain) {
-        this.elements.infoGain.style.display = 'none';
+      // Type the word
+      for (let char of word) {
+        this.addCharacter(char);
+        await this.wait(70 + Math.random() * 30);
       }
       
-      // Reset sync cards
-      const syncCards = $$('.demo__sync-card');
-      syncCards.forEach(card => {
-        removeClass(card, 'is-visible');
+      // Add space between words
+      if (i < words.length - 1) {
+        this.addCharacter(' ');
+        await this.wait(100);
+      }
+    }
+    
+    // Remove cursor after typing completes
+    await this.wait(500);
+    this.elements.typingContent.innerHTML = text;
+  }
+  
+  addCharacter(char) {
+    const content = this.elements.typingContent.innerHTML.replace(/<span class="demo__cursor">.*<\/span>/, '');
+    this.elements.typingContent.innerHTML = content + char + '<span class="demo__cursor">|</span>';
+  }
+  
+  /**
+   * Act 2: Natural Speech - Show how people actually talk
+   */
+  async actTwo_NaturalSpeech(scenario) {
+    // Show "Listening..." text when speech starts
+    this.elements.processingArea.style.opacity = '1';
+    this.elements.processingArea.querySelector('.demo__processing-text').textContent = 'Listening...';
+    
+    // Activate voice bars smoothly
+    this.elements.voiceBars.forEach((bar, index) => {
+      setTimeout(() => {
+        bar.classList.add('is-active');
+      }, index * 50);
+    });
+    
+    const text = scenario.naturalSpeech;
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    this.elements.speechContent.innerHTML = '';
+    
+    // Speak each sentence with natural flow
+    for (let sentence of sentences) {
+      const words = sentence.trim().split(' ');
+      
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        
+        // Create word element with proper spacing
+        const wordEl = document.createElement('span');
+        wordEl.className = 'flow-word';
+        wordEl.textContent = word;
+        wordEl.style.animationDelay = `${i * 0.05}s`;
+        
+        this.elements.speechContent.appendChild(wordEl);
+        
+        // Natural speech timing
+        const delay = this.getSpeechDelay(word);
+        await this.wait(delay);
+      }
+      
+      // Pause between sentences
+      await this.wait(300);
+    }
+    
+    // Deactivate voice bars smoothly
+    await this.wait(400);
+    this.elements.voiceBars.forEach((bar, index) => {
+      setTimeout(() => {
+        bar.classList.remove('is-active');
+      }, index * 50);
+    });
+  }
+  
+  getSpeechDelay(word) {
+    // Natural pauses based on punctuation and word length
+    if (word.includes('.') || word.includes('!') || word.includes('?')) {
+      return 200;
+    } else if (word.includes(',') || word.includes(':')) {
+      return 150;
+    } else if (word.length > 7) {
+      return 120;
+    } else {
+      return 80;
+    }
+  }
+  
+  /**
+   * Act 3: AI Understanding - Show Cyft's intelligence
+   */
+  async actThree_Understanding(scenario) {
+    // Show and update processing text
+    this.elements.processingArea.querySelector('.demo__processing-text').textContent = 'Understanding context...';
+    
+    // Simple processing animation
+    await this.wait(1500);
+    
+    // Update to generating
+    this.elements.processingArea.querySelector('.demo__processing-text').textContent = 'Generating documentation...';
+    
+    await this.wait(1000);
+    
+    // Hide processing text before revealing documentation
+    this.elements.processingArea.style.opacity = '0';
+    
+    await this.wait(300);
+    
+    // Reveal documentation elegantly
+    await this.revealDocumentation(scenario);
+  }
+  
+  /**
+   * Create mind map visualization
+   */
+  async createMindMap(scenario) {
+    // Create container
+    const container = document.createElement('div');
+    container.className = 'demo__mindmap';
+    
+    // Create SVG
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'mindmap-svg');
+    svg.setAttribute('viewBox', '0 0 400 320');
+    
+    // Define nodes based on scenario
+    const nodes = this.generateMindMapNodes(scenario);
+    
+    // Create connections first (so they appear behind nodes)
+    nodes.forEach((node, i) => {
+      if (node.connections) {
+        node.connections.forEach((targetIndex, j) => {
+          const target = nodes[targetIndex];
+          const path = this.createConnection(node, target, i * 200 + j * 100);
+          svg.appendChild(path);
+        });
+      }
+    });
+    
+    // Create center node first
+    const centerNode = nodes.find(n => n.type === 'center');
+    if (centerNode) {
+      const nodeGroup = this.createNode(centerNode, 0);
+      svg.appendChild(nodeGroup);
+    }
+    
+    // Create peripheral nodes with staggered timing
+    nodes.filter(n => n.type !== 'center').forEach((node, i) => {
+      const nodeGroup = this.createNode(node, 300 + i * 200);
+      svg.appendChild(nodeGroup);
+    });
+    
+    container.appendChild(svg);
+    
+    // Insert after processing text
+    this.elements.processingArea.after(container);
+    
+    // Trigger visibility
+    await this.wait(100);
+    container.classList.add('is-visible');
+  }
+  
+  /**
+   * Generate mind map nodes based on scenario
+   */
+  generateMindMapNodes(scenario) {
+    const speech = scenario.naturalSpeech.toLowerCase();
+    const nodes = [];
+    
+    // Center node - always present
+    nodes.push({
+      x: 200,
+      y: 160,
+      text: 'CONTEXT',
+      type: 'center',
+      connections: []
+    });
+    
+    // Calculate positions in a circle around center
+    const radius = 100;
+    const centerX = 200;
+    const centerY = 160;
+    let peripheralNodes = [];
+    
+    // Dynamic peripheral nodes based on content
+    if (speech.includes('password') || speech.includes('reset')) {
+      peripheralNodes.push({ text: 'Security' });
+    }
+    
+    if (speech.includes('user') || speech.includes('account')) {
+      peripheralNodes.push({ text: 'User' });
+    }
+    
+    if (speech.includes('locked') || speech.includes('failed')) {
+      peripheralNodes.push({ text: 'Issue' });
+    }
+    
+    if (speech.includes('active directory') || speech.includes('ad')) {
+      peripheralNodes.push({ text: 'System' });
+    }
+    
+    // Always add ticket and action nodes
+    peripheralNodes.push({ text: 'Ticket' });
+    peripheralNodes.push({ text: 'Action' });
+    
+    // Position peripheral nodes in a circle
+    peripheralNodes.forEach((node, i) => {
+      const angle = (2 * Math.PI * i) / peripheralNodes.length - Math.PI / 2;
+      nodes.push({
+        x: centerX + Math.cos(angle) * radius,
+        y: centerY + Math.sin(angle) * radius,
+        text: node.text,
+        type: 'peripheral'
+      });
+      nodes[0].connections.push(nodes.length - 1);
+    });
+    
+    return nodes;
+  }
+  
+  /**
+   * Create SVG connection line with curve
+   */
+  createConnection(start, end, delay) {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    
+    // Create a slight curve for more organic feel
+    const mx = (start.x + end.x) / 2;
+    const my = (start.y + end.y) / 2;
+    const curve = 10;
+    
+    const d = `M ${start.x} ${start.y} Q ${mx} ${my - curve} ${end.x} ${end.y}`;
+    path.setAttribute('d', d);
+    path.setAttribute('class', 'mindmap-connection');
+    path.style.animationDelay = `${delay}ms`;
+    return path;
+  }
+  
+  /**
+   * Create SVG node
+   */
+  createNode(node, delay) {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', `mindmap-node mindmap-${node.type}-node`);
+    g.style.animationDelay = `${delay}ms`;
+    
+    // Create circle
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', node.x);
+    circle.setAttribute('cy', node.y);
+    circle.setAttribute('r', node.type === 'center' ? '10' : '6');
+    circle.setAttribute('class', 'mindmap-node-circle');
+    
+    // Create pulse effect for center node
+    if (node.type === 'center') {
+      const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      pulse.setAttribute('cx', node.x);
+      pulse.setAttribute('cy', node.y);
+      pulse.setAttribute('r', '10');
+      pulse.setAttribute('class', 'mindmap-node-pulse');
+      g.appendChild(pulse);
+    }
+    
+    g.appendChild(circle);
+    
+    // Create text
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', node.x);
+    text.setAttribute('y', node.type === 'center' ? node.y : node.y);
+    text.setAttribute('class', 'mindmap-node-text');
+    text.textContent = node.text;
+    g.appendChild(text);
+    
+    return g;
+  }
+  
+  generateThoughts(scenario) {
+    // Remove old thought generation - no longer needed
+    return [];
+  }
+  
+  async revealDocumentation(scenario) {
+    const doc = scenario.documentation;
+    
+    // Build horizontal grid documentation HTML
+    let html = '';
+    
+    // Group sections by type for better horizontal layout
+    const sectionGroups = {
+      issue: null,
+      resolution: null,
+      actions: [],
+      internal: null,
+      details: null
+    };
+    
+    // Categorize sections
+    doc.sections.forEach(section => {
+      if (section.type === 'status') return; // Skip status
+      
+      if (section.type === 'resolution-notes') {
+        sectionGroups.resolution = section;
+      } else if (section.type === 'internal-notes') {
+        sectionGroups.internal = section;
+      } else if (section.type === 'details') {
+        sectionGroups.details = section;
+      } else if (section.heading && section.heading.toLowerCase().includes('issue')) {
+        sectionGroups.issue = section;
+      } else {
+        sectionGroups.actions.push(section);
+      }
+    });
+    
+    // Build issue summary card
+    if (sectionGroups.issue || doc.title) {
+      html += '<div class="doc-section" data-type="issue-summary">';
+      html += '<h4>Issue Summary</h4>';
+      if (doc.title) {
+        html += `<p><strong>${doc.title}</strong></p>`;
+      }
+      if (sectionGroups.issue && sectionGroups.issue.content) {
+        html += `<p>${sectionGroups.issue.content}</p>`;
+      }
+      html += '</div>';
+    }
+    
+    // Build resolution card
+    if (sectionGroups.resolution) {
+      html += '<div class="doc-section" data-type="resolution-notes">';
+      html += `<h4>${sectionGroups.resolution.heading || 'Resolution'}</h4>`;
+      if (sectionGroups.resolution.content) {
+        html += `<p>${sectionGroups.resolution.content}</p>`;
+      }
+      html += '</div>';
+    }
+    
+    // Build actions taken card
+    if (sectionGroups.actions.length > 0 || sectionGroups.internal) {
+      html += '<div class="doc-section" data-type="actions-taken">';
+      html += '<h4>Actions Taken</h4>';
+      
+      // Combine all action items
+      const allItems = [];
+      sectionGroups.actions.forEach(section => {
+        if (section.items) {
+          allItems.push(...section.items);
+        }
       });
       
-      this.state.isRunning = false;
-    }, 300);
+      if (allItems.length > 0) {
+        html += '<ul>';
+        allItems.forEach(item => {
+          html += `<li>${item}</li>`;
+        });
+        html += '</ul>';
+      }
+      
+      // Add internal notes if present
+      if (sectionGroups.internal && sectionGroups.internal.content) {
+        html += `<p style="margin-top: 12px; font-size: 13px; color: #666;">${sectionGroups.internal.content}</p>`;
+      }
+      html += '</div>';
+    }
+    
+    // Build details card (spans full width)
+    if (sectionGroups.details) {
+      html += '<div class="doc-section" data-type="details">';
+      html += `<h4>${sectionGroups.details.heading || 'Ticket Details'}</h4>`;
+      if (sectionGroups.details.items) {
+        html += '<div style="display: flex; gap: 30px; flex-wrap: wrap;">';
+        sectionGroups.details.items.forEach(item => {
+          html += `<div style="flex: 1; min-width: 150px;"><strong style="color: #666; font-size: 12px;">${item.split(':')[0]}:</strong><br>${item.split(':')[1] || ''}</div>`;
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    
+    this.elements.docContent.innerHTML = html;
+    
+    // Reveal documentation with smooth animation
+    await this.wait(300);
+    this.elements.docOutput.classList.add('is-visible');
   }
   
-  /**
-   * Reset content areas
-   */
-  resetContent() {
-    if (this.elements.transcriptText) {
-      this.elements.transcriptText.innerHTML = '<span class="u-text-light">Listening...</span>';
-    }
-    if (this.elements.typicalNotes) {
-      this.elements.typicalNotes.innerHTML = '<span class="u-text-light">Loading...</span>';
-    }
-    if (this.elements.docContent) {
-      this.elements.docContent.innerHTML = '';
-      this.elements.docContent.style.opacity = '0';
-    }
-    if (this.elements.infoGainContent) {
-      this.elements.infoGainContent.innerHTML = '';
-    }
+  reset() {
+    // Update scenario
+    this.state.currentScenarioIndex = (this.state.currentScenarioIndex + 1) % DEMO_SCENARIOS.length;
     
-    this.elements.processingIndicator.style.display = 'block';
-    this.elements.processingIndicator.style.opacity = '1';
-  }
-  
-  /**
-   * Animate ripple effect
-   */
-  animateRipple() {
-    // Create a new ripple element for each click
-    const ripple = createElement('span', {
-      classes: ['btn__ripple-effect']
-    });
+    // Smooth transition out
+    this.elements.splitView.style.transition = 'opacity 0.4s ease-out';
+    this.elements.splitView.style.opacity = '0';
     
-    this.elements.micButton.appendChild(ripple);
-    
-    // Trigger animation
-    requestAnimationFrame(() => {
-      addClass(ripple, 'is-animating');
-    });
-    
-    // Remove after animation
     setTimeout(() => {
-      ripple.remove();
-    }, 600);
+      // Reset UI state
+      this.elements.splitView.classList.remove('is-visible');
+      this.elements.splitView.style.opacity = '';
+      this.elements.docOutput.classList.remove('is-visible');
+      this.elements.resetSection.classList.remove('is-visible');
+      
+      // Clear content
+      this.elements.typingContent.innerHTML = '<span class="demo__cursor">|</span>';
+      this.elements.speechContent.innerHTML = '';
+      this.elements.docContent.innerHTML = '';
+      
+      // Reset processing area
+      this.elements.processingArea.style.display = '';
+      this.elements.processingArea.classList.remove('is-hidden');
+      this.elements.processingArea.querySelector('.demo__processing-text').textContent = 'Listening...';
+      
+      // Show voice section with fade in
+      this.elements.voiceSection.style.display = 'flex';
+      this.elements.voiceSection.style.opacity = '0';
+      
+      requestAnimationFrame(() => {
+        this.elements.voiceSection.style.transition = 'opacity 0.4s ease-out';
+        this.elements.voiceSection.style.opacity = '1';
+      });
+    }, 400);
   }
   
-  /**
-   * Get CSS delay class for given milliseconds
-   * @param {number} ms - Milliseconds of delay
-   * @returns {string} CSS class name
-   */
-  getDelayClass(ms) {
-    // Use the centralized helper from constants
-    return ANIMATION_DELAYS.getDelayClass(ms);
-  }
-  
-  /**
-   * Wait utility
-   * @param {number} ms - Milliseconds to wait
-   * @returns {Promise}
-   */
   wait(ms) {
-    return new Promise(resolve => {
-      const timeout = setTimeout(resolve, ms);
-      this.state.animationTimeouts.push(timeout);
-    });
-  }
-  
-  /**
-   * Destroy demo and cleanup
-   */
-  destroy() {
-    // Clear all timeouts
-    this.state.animationTimeouts.forEach(timeout => clearTimeout(timeout));
-    
-    // Remove event listeners
-    // Note: Using our DOM utility's on() function returns cleanup functions
-    // In a real implementation, we'd store these and call them here
-    
-    // Clear references
-    this.container = null;
-    this.elements = null;
-    this.state = null;
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
-/**
- * Factory function to create interactive demo
- * @param {string} containerId - Container element ID
- * @returns {InteractiveDemo|null}
- */
+// Export factory function
 export const createInteractiveDemo = (containerId) => {
-  try {
-    return new InteractiveDemo(containerId);
-  } catch (error) {
-    logger.error('Failed to create interactive demo:', error);
-    return null;
-  }
+  return new InteractiveDemo(containerId);
 }; 

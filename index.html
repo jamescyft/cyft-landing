@@ -49,17 +49,6 @@
         "name": "Cyft",
         "description": "Automated documentation software for MSPs that saves 90 minutes per technician per day",
         "applicationCategory": "BusinessApplication",
-        "offers": {
-            "@type": "Offer",
-            "price": "1299",
-            "priceCurrency": "USD",
-            "priceSpecification": {
-                "@type": "PriceSpecification",
-                "price": "1299",
-                "priceCurrency": "USD",
-                "billingDuration": "P1M"
-            }
-        },
         "aggregateRating": {
             "@type": "AggregateRating",
             "ratingValue": "4.8",
@@ -203,134 +192,75 @@
                                 <svg class="btn__icon" viewBox="0 0 24 24">
                                     <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
                                 </svg>
-                                <div class="btn__ripple"></div>
                             </button>
-                            <p class="demo__voice-hint u-text-body">Tap to begin</p>
+                            <p class="demo__voice-hint">Click to see the transformation</p>
                         </div>
 
                         <!-- Split View -->
                         <div id="split-view-section" class="demo__split-view">
                             <div class="demo__split-grid">
-                                <!-- Voice Column -->
-                                <div class="demo__voice-column">
-                                    <h3 class="a-fade-in">Without Cyft:</h3>
+                                <!-- Left: The Struggle -->
+                                <div class="demo__struggle-column">
+                                    <h3 class="demo__column-title">The Old Way</h3>
                                     
-                                    <div class="demo__typical-notes a-fade-in a-delay-200">
-                                        <p class="demo__typical-label">What techs usually type:</p>
-                                        <div id="typical-notes" class="demo__typical-text">
-                                            <span class="u-text-light">Loading...</span>
+                                    <!-- Typing Area -->
+                                    <div class="demo__typing-area">
+                                        <div class="demo__typing-header">
+                                            <span class="demo__typing-label">MANUAL ENTRY</span>
+                                        </div>
+                                        <div id="typical-notes" class="demo__typing-content">
+                                            <span class="demo__cursor">|</span>
                                         </div>
                                     </div>
                                     
-                                    <h3 class="a-fade-in a-delay-400">With Cyft:</h3>
-                                    <div class="demo__conversation a-fade-in a-delay-500">
-                                        <div class="demo__tech-speaking">
-                                            <div class="demo__avatar"></div>
-                                            <div class="demo__speech">
-                                                <p class="demo__speech-label">What they naturally say:</p>
-                                                <div id="transcript-text" class="demo__transcript">
-                                                    <span class="u-text-light">Listening...</span>
-                                                </div>
-                                                <div class="demo__audio-wave">
-                                                    <div class="demo__wave-bar a-voice-wave"></div>
-                                                    <div class="demo__wave-bar a-voice-wave a-delay-100"></div>
-                                                    <div class="demo__wave-bar a-voice-wave a-delay-200"></div>
-                                                    <div class="demo__wave-bar a-voice-wave a-delay-300"></div>
-                                                    <div class="demo__wave-bar a-voice-wave a-delay-400"></div>
-                                                    <span class="demo__wave-caption">Voice captured by Cyft</span>
-                                                </div>
+                                    <!-- Natural Speech -->
+                                    <div class="demo__speech-area">
+                                        <div class="demo__speech-header">
+                                            <span class="demo__speech-label">NATURAL SPEECH</span>
+                                            <div class="demo__voice-indicator">
+                                                <span class="voice-bar"></span>
+                                                <span class="voice-bar"></span>
+                                                <span class="voice-bar"></span>
+                                                <span class="voice-bar"></span>
                                             </div>
                                         </div>
+                                        <div id="transcript-text" class="demo__speech-content"></div>
                                     </div>
                                 </div>
 
-                                <!-- Documentation Column -->
-                                <div class="demo__doc-column">
-                                    <h3 class="a-fade-in a-delay-400">Cyft documents:</h3>
-                                    <div class="demo__doc-output a-slide-in-doc a-delay-500">
-                                        <div class="demo__doc-header">
-                                            <p class="demo__doc-system">Automatically synced to ConnectWise</p>
+                                <!-- Right: The Understanding -->
+                                <div class="demo__understanding-column">
+                                    <h3 class="demo__column-title">The Cyft Way</h3>
+                                    
+                                    <!-- Processing Area -->
+                                    <div class="demo__processing-area">
+                                        <div id="processing-indicator" class="demo__processing">
+                                            <span class="demo__processing-text">Listening...</span>
                                         </div>
                                         
-                                        <div class="demo__doc-content">
-                                            <div id="doc-content"></div>
-                                            
-                                            <div id="processing-indicator" class="demo__processing">
-                                                <div class="demo__typing-dots">
-                                                    <div class="demo__typing-dot a-typing-dot"></div>
-                                                    <div class="demo__typing-dot a-typing-dot"></div>
-                                                    <div class="demo__typing-dot a-typing-dot"></div>
-                                                </div>
-                                                <p class="demo__processing-text">Cyft is documenting...</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Information Gain -->
-                                    <div id="info-gain" class="demo__info-gain">
-                                        <h4>Information captured from voice:</h4>
-                                        <div id="info-gain-content" class="demo__info-gain-content"></div>
-                                    </div>
-                                    
-                                    <!-- Sync Indicators -->
-                                    <div id="sync-indicators" class="demo__sync-indicators">
-                                        <div class="demo__sync-card sync-card">
-                                            <svg class="demo__sync-icon" viewBox="0 0 24 24">
-                                                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                                            </svg>
-                                            <span class="demo__sync-text">Ticket Updated</span>
-                                        </div>
-                                        <div class="demo__sync-card sync-card">
-                                            <svg class="demo__sync-icon" viewBox="0 0 24 24">
-                                                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                                            </svg>
-                                            <span class="demo__sync-text">Documentation Saved</span>
-                                        </div>
-                                        <div class="demo__sync-card sync-card">
-                                            <svg class="demo__sync-icon" viewBox="0 0 24 24">
-                                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-                                            </svg>
-                                            <span class="demo__sync-text">Knowledge Base Updated</span>
-                                        </div>
+                                        <!-- Thought Bubbles Container -->
+                                        <div id="thoughts-container" class="demo__thoughts"></div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Reset Button -->
-                            <div id="reset-section" class="demo__reset">
-                                <button id="reset-demo" class="btn">
-                                    Try Another Scenario
-                                </button>
+                        </div>
+                        
+                        <!-- Documentation Output - Full Width -->
+                        <div id="doc-output" class="demo__doc-output">
+                            <div class="demo__doc-header">
+                                <span class="demo__doc-system">CONNECTWISE TICKET</span>
+                                <span class="demo__doc-status">READY</span>
                             </div>
+                            <div id="doc-content" class="demo__doc-content"></div>
+                        </div>
+
+                        <!-- Reset -->
+                        <div id="reset-section" class="demo__reset">
+                            <button id="reset-demo" class="btn btn--secondary">
+                                See Another Scenario
+                            </button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pricing Section -->
-        <section class="section section--pricing" aria-label="Pricing">
-            <div class="pricing__card u-animate-fade-in">
-                <!-- The Math -->
-                <div class="pricing__math">
-                    <p class="pricing__calculation">117,000 tickets × 6 minutes</p>
-                    <div class="pricing__divider"></div>
-                    <p class="pricing__result">$73,125</p>
-                    <p class="pricing__label">per month</p>
-                </div>
-                
-                <!-- Actual Price -->
-                <div class="pricing__actual">
-                    <p class="u-text-body u-text-muted u-mb-4">Cyft costs:</p>
-                    <p class="pricing__price">$1,299</p>
-                    <p class="pricing__label">per month</p>
-                </div>
-                
-                <!-- Features -->
-                <div class="pricing__features">
-                    <p>Unlimited technicians.</p>
-                    <p>All integrations.</p>
-                    <p>One price.</p>
                 </div>
             </div>
         </section>
@@ -422,11 +352,6 @@
     <!-- Footer -->
     <footer class="u-bg-primary u-text-muted u-py-11 u-px-6 u-align-center u-border-t">
         <p class="u-text-sm u-mb-6">© 2025 Cyft</p>
-        <div class="u-flex u-gap-8 u-justify-center u-flex-wrap">
-            <a href="/privacy" class="u-text-light u-hover:opacity-80">Privacy</a>
-            <a href="/terms" class="u-text-light u-hover:opacity-80">Terms</a>
-            <a href="/contact" class="u-text-light u-hover:opacity-80">Contact</a>
-        </div>
     </footer>
 
     <!-- Scripts -->

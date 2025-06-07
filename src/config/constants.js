@@ -12,18 +12,6 @@ export const APP_CONFIG = {
   version: '1.0.0'
 };
 
-export const PRICING = {
-  costPerMonth: 1299,
-  currency: 'USD',
-  currencySymbol: '$',
-  billingPeriod: 'month',
-  savingsCalculation: {
-    ticketsPerMonth: 117000,
-    minutesPerTicket: 6,
-    monthlySavings: 73125
-  }
-};
-
 export const ANIMATION_TIMING = {
   rippleExpand: 20000, // 20s
   rippleDelays: [0, 5000, 10000, 15000], // 0s, 5s, 10s, 15s

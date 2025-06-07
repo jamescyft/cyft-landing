@@ -331,4 +331,23 @@
   .form__actions {
     display: none;
   }
+}
+
+/* Form validation styles */
+.form__error {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: block;
+  min-height: 1.2rem;
+}
+
+.form__input.has-error {
+  border-color: #d32f2f;
+}
+
+.form__error:not(:empty) {
+  opacity: 1;
 } 

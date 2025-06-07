@@ -41,8 +41,9 @@ coverage/
 # Temporary files
 *.tmp
 *.temp
-.tmp/
-.temp/
+
+# Archive folder
+_archive/
 
 # OS files
 .DS_Store
