@@ -6,17 +6,22 @@
 // Import CSS - This ensures proper bundling with Vite
 import '../css/main.css';
 
-import { ready, $$, scrollTo } from './utils/dom.js';
+import { ERROR_MESSAGES } from '../config/constants.js';
+import { ENV } from '../config/environment.js';
+import { analyticsService } from '../services/analytics.service.js';
+import { apiService } from '../services/api.service.js';
+import { errorTracker } from '../services/error-tracker.service.js';
+import { ready, $$, scrollTo } from '../utils/dom.js';
+import { logger } from '../utils/logger.js';
+
 import { createFormValidator } from './modules/form-validator.js';
 import { createInteractiveDemo } from './modules/interactive-demo.js';
 import { createScrollAnimations } from './modules/scroll-animations.js';
-import { ERROR_MESSAGES, TIMEOUTS } from '../config/constants.js';
-import { logger } from './utils/logger.js';
-import { apiService } from '../services/api.service.js';
-import { analyticsService } from '../services/analytics.service.js';
-import { performanceMonitor } from '../services/performance-monitor.service.js';
-import { errorTracker } from '../services/error-tracker.service.js';
-import { ENV } from '../config/environment.js';
+import { createVideoLoader } from './modules/video-loader.js';
+import { createPerformanceMonitor } from './modules/performance-monitor.js';
+import { createSectionRevealer } from './modules/section-revealer.js';
+import { createResourceHints } from './modules/resource-hints.js';
+import { createPreloadScanner } from './modules/preload-scanner.js';
 
 /**
  * Application Class
@@ -28,7 +33,8 @@ class Application {
     this.modules = {
       formValidator: null,
       interactiveDemo: null,
-      scrollAnimations: null
+      scrollAnimations: null,
+      videoLoader: null
     };
     
     this.isInitialized = false;
@@ -39,6 +45,14 @@ class Application {
    */
   async init() {
     try {
+      // Critical performance optimizations FIRST
+      createPreloadScanner();
+      createPerformanceMonitor();
+      createResourceHints();
+      
+      // Reveal sections immediately to prevent flash
+      createSectionRevealer();
+      
       // Wait for DOM ready
       await this.waitForDOM();
       
@@ -77,6 +91,9 @@ class Application {
    * Initialize all modules
    */
   initializeModules() {
+    // Initialize video loader FIRST for performance
+    this.initVideoLoader();
+    
     // Initialize scroll animations
     this.initScrollAnimations();
     
@@ -85,6 +102,17 @@ class Application {
     
     // Initialize interactive demo
     this.initInteractiveDemo();
+  }
+  
+  /**
+   * Initialize video loader for performance
+   */
+  initVideoLoader() {
+    try {
+      this.modules.videoLoader = createVideoLoader();
+    } catch (error) {
+      logger.error('Failed to initialize video loader:', error);
+    }
   }
   
   /**
@@ -165,7 +193,7 @@ class Application {
       }
       
       // Submit via API service
-      const result = await apiService.submitDemoRequest(formData);
+      await apiService.submitDemoRequest(formData);
       
       // Animate form out and success in
       if (form && formSuccess && successInitial) {
@@ -414,7 +442,7 @@ class Application {
    */
   destroy() {
     // Destroy all modules
-    Object.entries(this.modules).forEach(([name, module]) => {
+    Object.entries(this.modules).forEach(([_name, module]) => {
       if (module && typeof module.destroy === 'function') {
         module.destroy();
       }

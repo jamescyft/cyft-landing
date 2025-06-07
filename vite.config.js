@@ -10,13 +10,41 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html')
+      },
+      output: {
+        // Code splitting for better caching
+        manualChunks(id) {
+          // Separate vendor chunks
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+          // Separate large modules
+          if (id.includes('scenarios.js')) {
+            return 'scenarios';
+          }
+          if (id.includes('interactive-demo.js')) {
+            return 'demo';
+          }
+        }
       }
     },
     // Optimize for production
     minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        passes: 3,
+        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
+      },
+      mangle: {
+        safari10: true
+      }
+    },
     cssMinify: true,
-    reportCompressedSize: true,
-    chunkSizeWarningLimit: 1000
+    cssCodeSplit: true,
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 500
   },
   
   server: {

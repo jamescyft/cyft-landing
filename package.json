@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:sheets": "node test-google-sheets.js"
+    "test:sheets": "node tests/test-google-sheets.js"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

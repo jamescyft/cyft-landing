@@ -4,7 +4,7 @@
  * Naming convention: @keyframes animation-name, .a-[animation-name]
  */
 
-@import './variables.css';
+@import url('./variables.css');
 
 /* Ripple Effect Animation */
 @keyframes ripple-expand {
@@ -12,14 +12,17 @@
     transform: scale(0);
     opacity: 0;
   }
+
   20% {
     transform: scale(0.5);
     opacity: 1;
   }
+
   60% {
     transform: scale(1.2);
     opacity: 0.8;
   }
+
   100% {
     transform: scale(2);
     opacity: 0;
@@ -36,6 +39,7 @@
     opacity: 0;
     transform: translateY(var(--space-4));
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -51,6 +55,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -66,6 +71,7 @@
     opacity: 0;
     transform: translateY(var(--space-8)) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -82,6 +88,7 @@
     opacity: 0;
     transform: translateX(calc(var(--space-4) * -1));
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -94,16 +101,18 @@
 
 /* Documentation Line Animation */
 @keyframes doc-line-appear {
-  from {
+  0% {
     opacity: 0;
     transform: translateY(var(--space-2));
     filter: blur(4px);
   }
+
   50% {
     opacity: 0.5;
     filter: blur(2px);
   }
-  to {
+
+  100% {
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
@@ -119,6 +128,7 @@
   from {
     background-color: rgba(0, 102, 255, 0.1);
   }
+
   to {
     background-color: transparent;
   }
@@ -134,6 +144,7 @@
     opacity: 0;
     transform: translateX(calc(var(--space-4) * -1));
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -150,9 +161,11 @@
     transform: scale(0.95);
     opacity: 0;
   }
+
   50% {
     transform: scale(1.02);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -169,6 +182,7 @@
     transform: scale(1);
     opacity: 1;
   }
+
   30% {
     transform: scale(1.3);
     opacity: 0.5;
@@ -192,6 +206,7 @@
   0%, 100% {
     transform: scaleY(0.5);
   }
+
   50% {
     transform: scaleY(1);
   }
@@ -220,6 +235,7 @@
     opacity: 0;
     transform: translateX(var(--space-4));
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -236,6 +252,7 @@
     opacity: 0;
     transform: translateY(var(--space-2));
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -251,6 +268,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -261,6 +279,7 @@
 }
 
 /* Animation Utilities */
+
 /* Animation Duration Modifiers */
 .a-duration-fast { animation-duration: var(--duration-fast); }
 .a-duration-normal { animation-duration: var(--duration-normal); }
@@ -300,6 +319,7 @@
 }
 
 /* Predefined Animation Delays */
+
 /* Clean, predictable delay classes using CSS custom properties */
 .a-delay-0 { animation-delay: var(--delay-0); }
 .a-delay-100 { animation-delay: var(--delay-100); }
@@ -334,16 +354,19 @@
     opacity: 0.3;
     transform: scaleY(1);
   }
+
   25% { 
     height: 40px; 
     opacity: 0.8;
     transform: scaleY(1.2);
   }
+
   50% { 
     height: 28px; 
     opacity: 0.6;
     transform: scaleY(1);
   }
+
   75% { 
     height: 36px; 
     opacity: 0.9;
@@ -357,16 +380,19 @@
     opacity: 0.4;
     transform: scaleY(1);
   }
+
   30% { 
     height: 48px; 
     opacity: 1;
     transform: scaleY(1.3);
   }
+
   60% { 
     height: 32px; 
     opacity: 0.7;
     transform: scaleY(1.1);
   }
+
   80% { 
     height: 40px; 
     opacity: 0.9;
@@ -380,16 +406,19 @@
     opacity: 0.35;
     transform: scaleY(1);
   }
+
   40% { 
     height: 44px; 
     opacity: 0.95;
     transform: scaleY(1.25);
   }
+
   65% { 
     height: 30px; 
     opacity: 0.65;
     transform: scaleY(1.05);
   }
+
   85% { 
     height: 38px; 
     opacity: 0.85;
@@ -403,16 +432,19 @@
     opacity: 0.5;
     transform: scaleY(1);
   }
+
   35% { 
     height: 52px; 
     opacity: 1;
     transform: scaleY(1.35);
   }
+
   55% { 
     height: 36px; 
     opacity: 0.75;
     transform: scaleY(1.15);
   }
+
   78% { 
     height: 42px; 
     opacity: 0.88;
@@ -426,16 +458,19 @@
     opacity: 0.3;
     transform: scaleY(1);
   }
+
   45% { 
     height: 36px; 
     opacity: 0.85;
     transform: scaleY(1.18);
   }
+
   70% { 
     height: 26px; 
     opacity: 0.55;
     transform: scaleY(1.08);
   }
+
   90% { 
     height: 32px; 
     opacity: 0.75;
@@ -449,10 +484,12 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transform: scale(1);
   }
+
   50% {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     transform: scale(1.02);
   }
+
   100% {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transform: scale(1);
@@ -466,10 +503,12 @@
     transform: translateY(20px) scale(0.95);
     filter: blur(2px);
   }
+
   50% {
     opacity: 0.7;
     filter: blur(0.5px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -482,10 +521,12 @@
   0% {
     color: inherit;
   }
+
   50% {
     color: #d32f2f;
     transform: translateX(1px);
   }
+
   100% {
     color: inherit;
     transform: translateX(0);
@@ -498,10 +539,12 @@
     opacity: 1; 
     transform: scaleY(1);
   }
+
   50%, 95% { 
     opacity: 0;
     transform: scaleY(0.7);
   }
+
   100% {
     opacity: 1;
     transform: scaleY(1);
@@ -514,9 +557,34 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Subtle Entrance - for already visible elements */
+@keyframes subtle-entrance {
+  from {
+    opacity: 1;
+    transform: translateY(5px);
+  }
+  
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle Fade Enhance - enhance already visible elements */
+@keyframes subtle-fade-enhance {
+  from {
+    opacity: 0.7;
+  }
+  
+  to {
+    opacity: 1;
   }
 }
 

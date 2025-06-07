@@ -4,7 +4,7 @@
  */
 
 /* Import variables */
-@import './variables.css';
+@import url('./variables.css');
 
 /* Modern CSS Reset */
 *,
@@ -17,8 +17,6 @@
 
 /* Prevent font size inflation */
 html {
-  -moz-text-size-adjust: none;
-  -webkit-text-size-adjust: none;
   text-size-adjust: none;
 }
 
@@ -64,7 +62,7 @@ body {
   background-color: var(--color-bg-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizelegibility;
   overflow-x: hidden;
 }
 
@@ -396,13 +394,13 @@ pre code {
   padding-right: var(--space-4);
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .container {
     max-width: var(--container-sm);
   }
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .container {
     max-width: var(--container-md);
     padding-left: var(--space-6);
@@ -410,19 +408,19 @@ pre code {
   }
 }
 
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
   .container {
     max-width: var(--container-lg);
   }
 }
 
-@media (min-width: 1280px) {
+@media (width >= 1280px) {
   .container {
     max-width: var(--container-xl);
   }
 }
 
-@media (min-width: 1536px) {
+@media (width >= 1536px) {
   .container {
     max-width: var(--container-2xl);
   }

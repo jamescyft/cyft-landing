@@ -5,30 +5,35 @@
  */
 
 /* Design Tokens and Variables */
-@import './variables.css';
+@import url('./variables.css');
 
 /* Base Styles and Reset */
-@import './base.css';
+@import url('./base.css');
 
 /* Utility Classes */
-@import './utilities.css';
+@import url('./utilities.css');
 
 /* Animation Definitions */
-@import './animations.css';
+@import url('./animations.css');
 
 /* Component Styles */
-@import './components/sections.css';
-@import './components/buttons.css';
-@import './components/forms.css';
-@import './components/interactive-demo.css';
-@import './components/video.css';
+@import url('./components/sections.css');
+@import url('./components/buttons.css');
+@import url('./components/forms.css');
+@import url('./components/interactive-demo.css');
+@import url('./components/video.css');
+@import url('./hero-optimized.css');
 
 /* Additional component styles can be added here */
+
 /* @import './components/footer.css'; */
+
 /* @import './components/navigation.css'; */
 
 /* Page-specific styles (if needed) */
+
 /* @import './pages/home.css'; */
 
 /* Vendor overrides (if needed) */
+
 /* @import './vendor-overrides.css'; */ 

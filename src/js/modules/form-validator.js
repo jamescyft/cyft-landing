@@ -3,9 +3,9 @@
  * Handles all form validation logic with proper error handling
  */
 
-import { FORM_VALIDATION, ERROR_MESSAGES } from '../../config/constants.js';
-import { $, on, addClass, removeClass, setAttributes } from '../utils/dom.js';
-import { logger } from '../utils/logger.js';
+import { FORM_VALIDATION } from '../../config/constants.js';
+import { $, on, addClass, removeClass, setAttributes } from '../../utils/dom.js';
+import { logger } from '../../utils/logger.js';
 
 /**
  * FormValidator Class
@@ -122,7 +122,7 @@ export class FormValidator {
           }
           break;
           
-        case 'number':
+        case 'number': {
           const num = parseFloat(value);
           const min = parseFloat(field.min);
           const max = parseFloat(field.max);
@@ -138,6 +138,7 @@ export class FormValidator {
             errorMessage = `Must be no more than ${max}`;
           }
           break;
+        }
       }
     }
     

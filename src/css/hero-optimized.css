@@ -1,0 +1,42 @@
+/**
+ * Optimized Hero Background
+ * Fallback CSS animation when video is loading/unavailable
+ */
+
+/* Keep animated background visible by default */
+.animated-background {
+  position: absolute;
+  inset: 0;
+  /* Subtle water-like gradient that matches video theme */
+  background: linear-gradient(135deg, #f5f7fa 0%, #e1e5eb 40%, #c3cbd6 100%);
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Hide animated background when video is loaded */
+.section--hero.has-video .animated-background {
+  opacity: 1;
+  pointer-events: none;
+}
+
+.section--hero.has-video.video-loaded .animated-background {
+  opacity: 0;
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .animated-background {
+    animation: none;
+  }
+}
+
+/* Video background shows when loaded */
+.video-background {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.video-background.is-loaded {
+  opacity: 1;
+} 

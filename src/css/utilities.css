@@ -4,7 +4,7 @@
  * Naming convention: .u-[property]-[value]
  */
 
-@import './variables.css';
+@import url('./variables.css');
 
 /* Display Utilities */
 .u-block { display: block; }
@@ -300,18 +300,19 @@
 
 /* Focus States */
 .u-focus\:outline-none:focus { outline: none; }
+
 .u-focus\:ring:focus { 
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: var(--focus-outline-offset);
 }
 
 /* Responsive Display Utilities */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .u-hidden-mobile { display: none; }
   .u-block-mobile { display: block; }
 }
 
-@media (min-width: 769px) {
+@media (width >= 769px) {
   .u-hidden-desktop { display: none; }
   .u-block-desktop { display: block; }
 }
@@ -323,7 +324,7 @@
 .u-grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
 /* Responsive Grid */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .u-grid-cols-1-mobile { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 }
 

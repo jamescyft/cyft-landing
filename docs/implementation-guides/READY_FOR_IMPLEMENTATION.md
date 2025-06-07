@@ -2,7 +2,7 @@
 
 ## ✅ Cleanup Complete
 
-The project structure has been cleaned and organized. All outdated and potentially confusing files have been moved to the `_archive/` folder.
+The project structure has been cleaned and organized. All outdated and potentially confusing files have been removed.
 
 ## 📋 Files Available for Implementation
 
@@ -37,7 +37,6 @@ The interactive demo (typing with mistakes, thought bubbles) should already be w
 
 ## ⚠️ Important
 
-- DO NOT look in the `_archive/` folder - it contains outdated guides
 - Follow ONLY `ULTRA_PRECISE_GUIDE.md`
 - Test after each change
 - The dev server should be running at http://localhost:3000 

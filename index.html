@@ -38,6 +38,28 @@
     <link rel="dns-prefetch" href="https://cyft.com">
     <link rel="preconnect" href="https://cyft.com">
     
+    <!-- Critical Inline CSS - MUST be inline to prevent FOUC -->
+    <style>
+        /* Critical CSS - Prevents Flash of Unstyled Content */
+        html{font-size:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+        body{margin:0;font-family:system-ui,-apple-system,sans-serif;line-height:1.5;color:#1a1a1a;background:#fff;min-height:100vh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+        .section--hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:#fff}
+        .hero__branding{position:absolute;top:2.5rem;left:50%;transform:translateX(-50%);z-index:10}
+        .hero__brand-name{font-size:0.875rem;font-weight:300;letter-spacing:0.15em;color:#666;text-transform:uppercase;opacity:0.7;display:inline-block}
+        .hero__content{text-align:center;z-index:10;position:relative;padding:0 1.5rem;width:100%}
+        .hero__title{font-size:clamp(2.5rem,4vw + 1rem,4.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1;margin:0;color:#000;opacity:1}
+        .hero__subtitle{font-size:clamp(1.25rem,2vw,1.75rem);font-weight:400;line-height:1.5;margin-top:1.5rem;color:#666;opacity:0.9}
+        .video-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;opacity:0}
+        .animated-background{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#f5f7fa 0%,#e1e5eb 40%,#c3cbd6 100%);z-index:1;opacity:1}
+        .section:not(.section--hero){opacity:0}
+        .btn{display:inline-flex;align-items:center;padding:1rem 2rem;font-size:1.125rem;font-weight:600;text-decoration:none;border-radius:0.5rem;cursor:pointer;border:none;transition:transform 0.2s}
+        .btn--primary{background:#1a1a1a;color:#fff}
+        .demo__container{min-height:600px}
+        .form-success-sequence{opacity:0;visibility:hidden}
+        @media(prefers-reduced-motion:no-preference){.a-simple-fade-in{animation:simpleFadeIn 0.8s ease-out forwards}}
+        @keyframes simpleFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+    
     <!-- Styles -->
     <!-- CSS is imported via JavaScript for proper bundling -->
     
@@ -81,14 +103,20 @@
                 </div>
             </div>
             
-            <!-- Video Background -->
-            <div class="video-background">
-                <video autoplay muted loop playsinline>
-                    <source src="/assets/videos/Drops of Water Ripples.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="video-overlay"></div>
-            </div>
+                    <!-- Video Background -->
+        <div class="video-background">
+            <video muted loop playsinline preload="none" poster="">
+                <!-- Original 14MB video - DO NOT COMMIT -->
+                <!-- <source src="/assets/videos/Drops of Water Ripples.mp4" type="video/mp4"> -->
+                
+                <!-- Compressed version for production -->
+                <source src="/assets/videos/hero-video-compressed.mp4" type="video/mp4">
+                
+                <!-- Fallback for older browsers -->
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-overlay"></div>
+        </div>
             
             <!-- Cyft Branding -->
             <div class="hero__branding">

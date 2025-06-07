@@ -94,4 +94,22 @@ QUICK_*.md
 GIT_*.md
 VERCEL_*.md
 V0_*.md
-COMPLETE_*.md 
+COMPLETE_*.md
+
+# Large Media Files - CRITICAL: Never commit these!
+# Original video is 14MB - must stay out of git!
+public/assets/videos/Drops of Water Ripples.mp4
+
+# Allow compressed videos (must be under 5MB!)
+!public/assets/videos/hero-video-compressed.mp4
+!public/assets/videos/hero-video-tiny.mp4
+
+# Block other large video formats
+public/assets/videos/*.mov
+public/assets/videos/*.avi
+public/assets/videos/*.webm
+public/assets/videos/*.mkv
+
+# Utility scripts
+compress-video.sh
+check-video-status.sh 

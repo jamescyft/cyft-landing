@@ -1,0 +1,122 @@
+/**
+ * Critical CSS - Above-the-fold styles only
+ * Inlined in HTML for maximum performance
+ */
+
+/* Base Reset */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+/* Critical Variables */
+:root {
+  --color-primary: #1a1a1a;
+  --color-background: #fff;
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-size-base: clamp(1rem, 0.5rem + 1vw, 1.125rem);
+  --line-height-base: 1.5;
+  --container-max: 1200px;
+  --spacing-base: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* Base Typography */
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-primary);
+  background: var(--color-background);
+  min-height: 100vh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Critical Layout */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--spacing-base);
+}
+
+/* Hero Section - Critical */
+.section--hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero__title {
+  font-size: clamp(2.5rem, 4vw + 1rem, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero__subtitle {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+/* Critical Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* Video Background Placeholder */
+.video-background {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #f0f0f0;
+}
+
+.video-background--loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Hide non-critical elements initially */
+.section:not(.section--hero),
+.demo-container,
+.fade-in {
+  opacity: 0;
+} 

@@ -209,7 +209,7 @@ export class InteractiveDemo {
       if (Math.random() < 0.15 && word.length > 4) {
         // Type with typo first
         const typoWord = word.substring(0, word.length - 2) + word.charAt(word.length - 1) + word.charAt(word.length - 2);
-        for (let char of typoWord) {
+        for (const char of typoWord) {
           this.addCharacter(char);
           await this.wait(45 + Math.random() * 25);
         }
@@ -224,13 +224,13 @@ export class InteractiveDemo {
         }
         
         // Type correctly
-        for (let char of word) {
+        for (const char of word) {
           this.addCharacter(char);
           await this.wait(55 + Math.random() * 20);
         }
       } else {
         // Normal typing
-      for (let char of word) {
+      for (const char of word) {
         this.addCharacter(char);
           await this.wait(50 + Math.random() * 30);
         }
@@ -349,7 +349,7 @@ export class InteractiveDemo {
     this.elements.processingArea.after(tracker);
   }
   
-  async triggerContextualInsight(insight, index) {
+  async triggerContextualInsight(insight, _index) {
     const insightsList = document.querySelector('.insights-list');
     if (!insightsList) return;
     
@@ -375,7 +375,7 @@ export class InteractiveDemo {
   /**
    * Phase 3: Show intelligent processing and feature activation
    */
-  async showIntelligentProcessing(scenario) {
+  async showIntelligentProcessing(_scenario) {
     this.elements.processingArea.querySelector('.demo__processing-text').textContent = 'Analyzing technical context...';
     
     // Update status
@@ -533,7 +533,7 @@ export class InteractiveDemo {
   showGlassPane() {
     if (!this.currentTicketData) return;
     
-    const { doc, totalOptimized } = this.currentTicketData;
+    const { doc } = this.currentTicketData;
     
     // Create the glass pane overlay
     const glassPane = document.createElement('div');

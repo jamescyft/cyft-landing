@@ -4,8 +4,8 @@
  */
 
 import { PERFORMANCE } from '../../config/constants.js';
-import { $$, addClass, removeClass } from '../utils/dom.js';
-import { logger } from '../utils/logger.js';
+import { $$, addClass, removeClass } from '../../utils/dom.js';
+import { logger } from '../../utils/logger.js';
 
 /**
  * ScrollAnimations Class

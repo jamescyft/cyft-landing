@@ -3,7 +3,7 @@
  * Styles for major page sections
  */
 
-@import '../variables.css';
+@import url('../variables.css');
 
 /* Base Section Styles */
 .section {
@@ -84,8 +84,8 @@
   letter-spacing: var(--letter-spacing-widest);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  opacity: 0;
-  animation: simple-fade-in 2s ease-out 1s forwards;
+  opacity: 0.7; /* Fixed! No more flash! */
+  animation: subtle-fade-enhance 2s ease-out 0.5s forwards;
 }
 
 .hero__content {
@@ -102,8 +102,8 @@
   line-height: var(--line-height-tight);
   margin: 0;
   color: var(--color-black-pure);
-  opacity: 0;
-  animation: simple-fade-in 1.5s ease-out 0.5s forwards;
+  opacity: 1; /* No flash! Start visible! */
+  animation: subtle-entrance 1.5s ease-out 0.2s both;
 }
 
 .hero__subtitle {
@@ -177,6 +177,7 @@
 .memory-fade p:nth-child(2) { opacity: 0.7; }
 .memory-fade p:nth-child(3) { opacity: 0.5; }
 .memory-fade p:nth-child(4) { opacity: 0.35; }
+
 .memory-fade p:nth-child(5) { 
   opacity: 0.2; 
   font-style: italic;
@@ -239,7 +240,6 @@
 .reveal__truth-line--emphasis {
   font-weight: var(--font-weight-regular);
   background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-  -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -290,7 +290,7 @@
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .section {
     padding: var(--space-section-mobile) 6vw;
   }

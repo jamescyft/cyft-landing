@@ -79,7 +79,7 @@
 }
 
 /* Mobile Optimization - Disable Video on Small Screens */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .video-background video {
         display: none;
     }
