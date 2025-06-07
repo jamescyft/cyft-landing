@@ -64,6 +64,7 @@
 .u-inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
 
 /* Width Utilities */
+.u-w-1 { width: 1px; }
 .u-w-full { width: 100%; }
 .u-w-screen { width: 100vw; }
 .u-w-auto { width: auto; }
@@ -74,6 +75,7 @@
 .u-max-w-2xl { max-width: var(--container-2xl); }
 
 /* Height Utilities */
+.u-h-100 { height: 100px; }
 .u-h-full { height: 100%; }
 .u-h-screen { height: 100vh; }
 .u-h-auto { height: auto; }
@@ -85,6 +87,20 @@
 .u-mx-auto { margin-left: auto; margin-right: auto; }
 .u-my-auto { margin-top: auto; margin-bottom: auto; }
 
+/* Y-axis Margins */
+.u-my-1 { margin-top: var(--space-1); margin-bottom: var(--space-1); }
+.u-my-2 { margin-top: var(--space-2); margin-bottom: var(--space-2); }
+.u-my-3 { margin-top: var(--space-3); margin-bottom: var(--space-3); }
+.u-my-4 { margin-top: var(--space-4); margin-bottom: var(--space-4); }
+.u-my-5 { margin-top: var(--space-5); margin-bottom: var(--space-5); }
+.u-my-6 { margin-top: var(--space-6); margin-bottom: var(--space-6); }
+.u-my-7 { margin-top: var(--space-7); margin-bottom: var(--space-7); }
+.u-my-8 { margin-top: var(--space-8); margin-bottom: var(--space-8); }
+.u-my-9 { margin-top: var(--space-9); margin-bottom: var(--space-9); }
+.u-my-10 { margin-top: var(--space-10); margin-bottom: var(--space-10); }
+.u-my-11 { margin-top: var(--space-11); margin-bottom: var(--space-11); }
+.u-my-12 { margin-top: var(--space-12); margin-bottom: var(--space-12); }
+
 /* Margin Spacing */
 .u-m-1 { margin: var(--space-1); }
 .u-m-2 { margin: var(--space-2); }
@@ -92,7 +108,12 @@
 .u-m-4 { margin: var(--space-4); }
 .u-m-5 { margin: var(--space-5); }
 .u-m-6 { margin: var(--space-6); }
+.u-m-7 { margin: var(--space-7); }
 .u-m-8 { margin: var(--space-8); }
+.u-m-9 { margin: var(--space-9); }
+.u-m-10 { margin: var(--space-10); }
+.u-m-11 { margin: var(--space-11); }
+.u-m-12 { margin: var(--space-12); }
 
 /* Directional Margins */
 .u-mt-0 { margin-top: 0; }
@@ -102,7 +123,12 @@
 .u-mt-4 { margin-top: var(--space-4); }
 .u-mt-5 { margin-top: var(--space-5); }
 .u-mt-6 { margin-top: var(--space-6); }
+.u-mt-7 { margin-top: var(--space-7); }
 .u-mt-8 { margin-top: var(--space-8); }
+.u-mt-9 { margin-top: var(--space-9); }
+.u-mt-10 { margin-top: var(--space-10); }
+.u-mt-11 { margin-top: var(--space-11); }
+.u-mt-12 { margin-top: var(--space-12); }
 
 .u-mb-0 { margin-bottom: 0; }
 .u-mb-1 { margin-bottom: var(--space-1); }
@@ -111,7 +137,12 @@
 .u-mb-4 { margin-bottom: var(--space-4); }
 .u-mb-5 { margin-bottom: var(--space-5); }
 .u-mb-6 { margin-bottom: var(--space-6); }
+.u-mb-7 { margin-bottom: var(--space-7); }
 .u-mb-8 { margin-bottom: var(--space-8); }
+.u-mb-9 { margin-bottom: var(--space-9); }
+.u-mb-10 { margin-bottom: var(--space-10); }
+.u-mb-11 { margin-bottom: var(--space-11); }
+.u-mb-12 { margin-bottom: var(--space-12); }
 
 /* Padding Utilities */
 .u-p-0 { padding: 0; }
@@ -121,13 +152,23 @@
 .u-p-4 { padding: var(--space-4); }
 .u-p-5 { padding: var(--space-5); }
 .u-p-6 { padding: var(--space-6); }
+.u-p-7 { padding: var(--space-7); }
 .u-p-8 { padding: var(--space-8); }
+.u-p-9 { padding: var(--space-9); }
+.u-p-10 { padding: var(--space-10); }
+.u-p-11 { padding: var(--space-11); }
+.u-p-12 { padding: var(--space-12); }
 
 /* Directional Padding */
 .u-px-4 { padding-left: var(--space-4); padding-right: var(--space-4); }
 .u-px-6 { padding-left: var(--space-6); padding-right: var(--space-6); }
 .u-py-4 { padding-top: var(--space-4); padding-bottom: var(--space-4); }
 .u-py-6 { padding-top: var(--space-6); padding-bottom: var(--space-6); }
+.u-py-8 { padding-top: var(--space-8); padding-bottom: var(--space-8); }
+.u-py-9 { padding-top: var(--space-9); padding-bottom: var(--space-9); }
+.u-py-10 { padding-top: var(--space-10); padding-bottom: var(--space-10); }
+.u-py-11 { padding-top: var(--space-11); padding-bottom: var(--space-11); }
+.u-py-12 { padding-top: var(--space-12); padding-bottom: var(--space-12); }
 
 /* Typography Utilities */
 .u-text-xs { font-size: var(--font-size-tiny); }
@@ -173,6 +214,8 @@
 .u-bg-secondary { background-color: var(--color-bg-secondary); }
 .u-bg-white { background-color: var(--color-white-pure); }
 .u-bg-black { background-color: var(--color-black-pure); }
+.u-bg-light { background-color: var(--color-text-light); }
+.u-bg-warning { background-color: var(--color-warning); }
 
 /* Border Utilities */
 .u-border-0 { border: 0; }
