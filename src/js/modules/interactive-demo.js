@@ -70,7 +70,7 @@ export class InteractiveDemo {
       resetSection: $('#reset-section'),
       infoGain: $('#info-gain'),
       infoGainContent: $('#info-gain-content'),
-      ripple: $('.ripple', this.elements.micButton)
+      ripple: $('.btn__ripple', this.elements.micButton)
     };
     
     // Validate required elements
@@ -104,16 +104,39 @@ export class InteractiveDemo {
     this.state.isRunning = true;
     const scenario = DEMO_SCENARIOS[this.state.currentScenarioIndex];
     
+    // Add active state to mic button for pulse animation
+    addClass(this.elements.micButton, 'is-active');
+    
     // Trigger ripple animation
     this.animateRipple();
     
-    // Transition to split view
+    // Smooth transition to split view
     setTimeout(() => {
-      hide(this.elements.voiceInputSection);
-      show(this.elements.splitViewSection);
+      // Fade out voice input section
+      this.elements.voiceInputSection.style.opacity = '0';
+      this.elements.voiceInputSection.style.transform = 'scale(0.95)';
       
-      // Start the scenario
-      this.runScenario(scenario);
+      setTimeout(() => {
+        hide(this.elements.voiceInputSection);
+        removeClass(this.elements.micButton, 'is-active');
+        
+        // Show split view with animation
+        this.elements.splitViewSection.style.display = 'block';
+        this.elements.splitViewSection.style.opacity = '0';
+        
+        // Force reflow
+        void this.elements.splitViewSection.offsetHeight;
+        
+        // Fade in split view
+        requestAnimationFrame(() => {
+          this.elements.splitViewSection.style.transition = 'opacity 0.6s ease-out';
+          this.elements.splitViewSection.style.opacity = '1';
+          addClass(this.elements.splitViewSection, 'is-visible');
+        });
+        
+        // Start the scenario
+        this.runScenario(scenario);
+      }, 300);
     }, TIMEOUTS.rippleAnimation);
   }
   
@@ -125,7 +148,8 @@ export class InteractiveDemo {
     // Reset content
     this.resetContent();
     
-    // Start typing typical notes
+    // Start typing typical notes with smoother timing
+    await this.wait(300); // Small delay for visual flow
     await this.typeText(
       scenario.typicalNotes,
       this.elements.typicalNotes,
@@ -141,6 +165,9 @@ export class InteractiveDemo {
       this.elements.transcriptText,
       DEMO_CONFIG.typingSpeed.transcript
     );
+    
+    // Animate voice waves while transcript is typing
+    this.animateVoiceWaves();
     
     // Wait before documentation
     await this.wait(DEMO_CONFIG.delays.beforeDocumentation);
@@ -171,10 +198,25 @@ export class InteractiveDemo {
       
       const type = () => {
         if (index < text.length) {
-          element.innerHTML += text.charAt(index);
+          // Add character with smooth cursor effect
+          const char = text.charAt(index);
+          element.innerHTML += char;
+          
+          // Add typing cursor effect
+          if (index === text.length - 1) {
+            element.innerHTML += '<span class="typing-cursor">|</span>';
+            setTimeout(() => {
+              const cursor = element.querySelector('.typing-cursor');
+              if (cursor) cursor.remove();
+            }, 500);
+          }
+          
           index++;
+          
+          // Variable typing speed for more natural effect
+          const nextDelay = speed + (Math.random() * 30 - 15);
           this.state.animationTimeouts.push(
-            setTimeout(type, speed)
+            setTimeout(type, nextDelay)
           );
         } else {
           resolve();
@@ -186,14 +228,35 @@ export class InteractiveDemo {
   }
   
   /**
+   * Animate voice waves
+   */
+  animateVoiceWaves() {
+    const waves = $$('.a-voice-wave');
+    waves.forEach(wave => {
+      addClass(wave, 'is-active');
+    });
+    
+    // Stop animation after transcript is done
+    setTimeout(() => {
+      waves.forEach(wave => {
+        removeClass(wave, 'is-active');
+      });
+    }, 5000);
+  }
+  
+  /**
    * Generate documentation with animations
    * @param {Object} scenario - Scenario configuration
    */
   async generateDocumentation(scenario) {
     const doc = scenario.documentation;
     
-    hide(this.elements.processingIndicator);
-    this.elements.docContent.style.opacity = '1';
+    // Smooth transition from processing to content
+    this.elements.processingIndicator.style.opacity = '0';
+    setTimeout(() => {
+      hide(this.elements.processingIndicator);
+      addClass(this.elements.docContent, 'is-visible');
+    }, 300);
     
     // Build documentation HTML
     const docElements = [];
@@ -201,7 +264,7 @@ export class InteractiveDemo {
     // Title
     docElements.push(
       createElement('h4', {
-        classes: ['doc-title', 'a-doc-line', 'a-line-highlight'],
+        classes: ['doc-title', 'a-doc-line'],
         text: doc.title
       })
     );
@@ -209,18 +272,25 @@ export class InteractiveDemo {
     // Sections
     doc.sections.forEach(section => {
       if (section.heading) {
-        docElements.push(
-          createElement('h5', {
-            classes: ['doc-section-header', 'a-doc-line', 'a-line-highlight'],
-            text: section.heading
-          })
-        );
+        const header = createElement('h5', {
+          classes: ['doc-section-header', 'a-doc-line'],
+          text: section.heading
+        });
+        docElements.push(header);
+        
+        // Highlight section headers briefly
+        setTimeout(() => {
+          addClass(header, 'is-highlighted');
+          setTimeout(() => {
+            removeClass(header, 'is-highlighted');
+          }, 1000);
+        }, 500);
       }
       
       if (section.content) {
         docElements.push(
           createElement('p', {
-            classes: ['doc-content', 'a-doc-line', 'a-line-highlight'],
+            classes: ['doc-content', 'a-doc-line'],
             text: section.content
           })
         );
@@ -234,7 +304,7 @@ export class InteractiveDemo {
         section.items.forEach(item => {
           list.appendChild(
             createElement('li', {
-              classes: ['doc-list-item', 'a-doc-line', 'a-line-highlight'],
+              classes: ['doc-list-item', 'a-doc-line'],
               text: item
             })
           );
@@ -265,29 +335,25 @@ export class InteractiveDemo {
     
     // Clear and append all elements
     this.elements.docContent.innerHTML = '';
-    docElements.forEach(element => {
-      this.elements.docContent.appendChild(element);
-    });
     
-    // Animate each line with stagger
-    const lines = $$('.a-doc-line', this.elements.docContent);
-    lines.forEach((line, index) => {
-      const delay = index * ANIMATION_TIMING.lineStagger + 
-                   (Math.floor(index / 3) * ANIMATION_TIMING.groupDelay);
+    // Append elements with staggered animation
+    for (let i = 0; i < docElements.length; i++) {
+      const element = docElements[i];
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(10px)';
+      this.elements.docContent.appendChild(element);
       
-      // Map calculated delay to nearest predefined CSS class
-      const delayClass = this.getDelayClass(delay);
-      addClass(line, delayClass);
+      await this.wait(100); // Stagger each element
       
-      // Remove highlight after animation
-      setTimeout(() => {
-        removeClass(line, 'a-line-highlight');
-      }, delay + TIMEOUTS.highlightRemoval);
-    });
+      requestAnimationFrame(() => {
+        element.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0)';
+      });
+    }
     
     // Wait for animations to complete
-    const totalDelay = lines.length * ANIMATION_TIMING.lineStagger + TIMEOUTS.documentationComplete;
-    await this.wait(totalDelay);
+    await this.wait(500);
   }
   
   /**
@@ -295,36 +361,56 @@ export class InteractiveDemo {
    * @param {Object} scenario - Scenario configuration
    */
   showCompletionUI(scenario) {
-    // Show information gain
+    // Show information gain with smooth animation
     if (scenario.informationGain && this.elements.infoGain) {
-      show(this.elements.infoGain);
+      this.elements.infoGain.style.display = 'block';
+      this.elements.infoGain.style.opacity = '0';
       
-      // Map index to predefined delay classes
-      const delayClasses = ['0', '100', '200', '300', '400', '500', '600', '700', '800', '900'];
+      requestAnimationFrame(() => {
+        this.elements.infoGain.style.transition = 'opacity 0.6s ease-out';
+        this.elements.infoGain.style.opacity = '1';
+      });
       
-      this.elements.infoGainContent.innerHTML = scenario.informationGain
-        .map((item, index) => {
-          const delayClass = index < delayClasses.length ? delayClasses[index] : '1000';
-          return `<p class="info-gain-item a-fade-in a-delay-${delayClass}">${item.description}</p>`;
-        })
-        .join('');
+      // Populate content with staggered items
+      this.elements.infoGainContent.innerHTML = '';
+      scenario.informationGain.forEach((item, index) => {
+        setTimeout(() => {
+          const p = createElement('p', {
+            classes: ['info-gain-item'],
+            text: item.description
+          });
+          p.style.opacity = '0';
+          p.style.transform = 'translateX(-10px)';
+          this.elements.infoGainContent.appendChild(p);
+          
+          requestAnimationFrame(() => {
+            p.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
+            p.style.opacity = '1';
+            p.style.transform = 'translateX(0)';
+          });
+        }, index * 150);
+      });
     }
     
-    // Show sync indicators
+    // Show sync indicators with improved animation
     if (this.elements.syncIndicators) {
-      this.elements.syncIndicators.style.opacity = '1';
-      
-      const syncCards = $$('.sync-card', this.elements.syncIndicators);
-      syncCards.forEach((card, index) => {
-        setTimeout(() => {
-          addClass(card, 'a-fade-up');
-        }, index * DEMO_CONFIG.delays.syncIndicators);
-      });
+      setTimeout(() => {
+        addClass(this.elements.syncIndicators, 'is-visible');
+        
+        const syncCards = $$('.demo__sync-card', this.elements.syncIndicators);
+        syncCards.forEach((card, index) => {
+          setTimeout(() => {
+            addClass(card, 'is-visible');
+          }, index * 150);
+        });
+      }, 800);
     }
     
     // Show reset button
     if (this.elements.resetSection) {
-      this.elements.resetSection.style.opacity = '1';
+      setTimeout(() => {
+        addClass(this.elements.resetSection, 'is-visible');
+      }, 1500);
     }
     
     this.state.isRunning = false;
@@ -342,31 +428,44 @@ export class InteractiveDemo {
     this.state.currentScenarioIndex = 
       (this.state.currentScenarioIndex + 1) % DEMO_SCENARIOS.length;
     
-    // Reset UI
-    show(this.elements.voiceInputSection);
-    hide(this.elements.splitViewSection);
+    // Smooth transition back to initial state
+    this.elements.splitViewSection.style.opacity = '0';
     
-    // Reset content
-    this.resetContent();
-    
-    // Reset visibility
-    if (this.elements.resetSection) {
-      this.elements.resetSection.style.opacity = '0';
-    }
-    if (this.elements.syncIndicators) {
-      this.elements.syncIndicators.style.opacity = '0';
-    }
-    if (this.elements.infoGain) {
-      hide(this.elements.infoGain);
-    }
-    
-    // Reset sync cards
-    const syncCards = $$('.sync-card');
-    syncCards.forEach(card => {
-      removeClass(card, 'a-fade-up');
-    });
-    
-    this.state.isRunning = false;
+    setTimeout(() => {
+      // Reset UI
+      hide(this.elements.splitViewSection);
+      removeClass(this.elements.splitViewSection, 'is-visible');
+      
+      this.elements.voiceInputSection.style.display = 'flex';
+      this.elements.voiceInputSection.style.opacity = '0';
+      this.elements.voiceInputSection.style.transform = 'scale(1.05)';
+      
+      requestAnimationFrame(() => {
+        this.elements.voiceInputSection.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
+        this.elements.voiceInputSection.style.opacity = '1';
+        this.elements.voiceInputSection.style.transform = 'scale(1)';
+      });
+      
+      // Reset content
+      this.resetContent();
+      
+      // Reset visibility classes
+      removeClass(this.elements.resetSection, 'is-visible');
+      removeClass(this.elements.syncIndicators, 'is-visible');
+      removeClass(this.elements.docContent, 'is-visible');
+      
+      if (this.elements.infoGain) {
+        this.elements.infoGain.style.display = 'none';
+      }
+      
+      // Reset sync cards
+      const syncCards = $$('.demo__sync-card');
+      syncCards.forEach(card => {
+        removeClass(card, 'is-visible');
+      });
+      
+      this.state.isRunning = false;
+    }, 300);
   }
   
   /**
@@ -381,24 +480,36 @@ export class InteractiveDemo {
     }
     if (this.elements.docContent) {
       this.elements.docContent.innerHTML = '';
+      this.elements.docContent.style.opacity = '0';
     }
     if (this.elements.infoGainContent) {
       this.elements.infoGainContent.innerHTML = '';
     }
     
-    show(this.elements.processingIndicator);
+    this.elements.processingIndicator.style.display = 'block';
+    this.elements.processingIndicator.style.opacity = '1';
   }
   
   /**
    * Animate ripple effect
    */
   animateRipple() {
-    if (this.elements.ripple) {
-      addClass(this.elements.ripple, 'a-ripple-click');
-      setTimeout(() => {
-        removeClass(this.elements.ripple, 'a-ripple-click');
-      }, TIMEOUTS.rippleAnimation);
-    }
+    // Create a new ripple element for each click
+    const ripple = createElement('span', {
+      classes: ['btn__ripple-effect']
+    });
+    
+    this.elements.micButton.appendChild(ripple);
+    
+    // Trigger animation
+    requestAnimationFrame(() => {
+      addClass(ripple, 'is-animating');
+    });
+    
+    // Remove after animation
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
   }
   
   /**
