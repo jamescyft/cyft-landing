@@ -37,10 +37,10 @@ export const ENV = {
     }
   },
   
-  // Google Sheets integration
+  // Google Sheets integration - Hardcoded for now
   googleSheets: {
-    enabled: import.meta.env?.VITE_GOOGLE_SHEETS_ENABLED === 'true',
-    scriptUrl: import.meta.env?.VITE_GOOGLE_SHEETS_SCRIPT_URL || ''
+    enabled: true,
+    scriptUrl: 'https://script.google.com/macros/s/AKfycbzGZDyBFN8wOhMfBLmTJ4r_nmO_Bf3UyBJNN8wfBmrla6yqq-SxCeEV7eZ-qKfjQwd6Ng/exec'
   }
 };
 
