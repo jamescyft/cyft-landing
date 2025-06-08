@@ -3,17 +3,8 @@
  * Initializes all modules and manages application lifecycle
  */
 
-// CRITICAL DEBUG LOGGING - Track initialization in production
-console.log('[CYFT] Main.js loading started', {
-  timestamp: new Date().toISOString(),
-  url: window.location.href,
-  userAgent: navigator.userAgent
-});
-
 // Import CSS - This ensures proper bundling with Vite
 import '../css/main.css';
-
-console.log('[CYFT] Starting module imports...');
 
 import { ERROR_MESSAGES } from '../config/constants.js';
 import { ENV } from '../config/environment.js';
@@ -32,8 +23,6 @@ import { createScrollAnimations } from './modules/scroll-animations.js';
 import { createSectionRevealer } from './modules/section-revealer.js';
 import { createVideoLoader } from './modules/video-loader.js';
 
-console.log('[CYFT] All imports completed successfully');
-
 /**
  * Application Class
  * Simplified controller that delegates to services
@@ -41,7 +30,6 @@ console.log('[CYFT] All imports completed successfully');
  */
 class Application {
   constructor() {
-    console.log('[CYFT] Application constructor called');
     this.modules = {
       formValidator: null,
       interactiveDemo: null,
@@ -56,29 +44,22 @@ class Application {
    * Initialize application
    */
   async init() {
-    console.log('[CYFT] Application.init() started');
     try {
       // Critical performance optimizations FIRST
-      console.log('[CYFT] Creating performance modules...');
       createPreloadScanner();
       createPerformanceMonitor();
       createResourceHints();
       
       // Reveal sections immediately to prevent flash
-      console.log('[CYFT] Creating section revealer...');
       createSectionRevealer();
       
       // Wait for DOM ready
-      console.log('[CYFT] Waiting for DOM...');
       await this.waitForDOM();
-      console.log('[CYFT] DOM ready');
       
       // Initialize modules
-      console.log('[CYFT] Initializing modules...');
       this.initializeModules();
       
       // Setup navigation
-      console.log('[CYFT] Setting up navigation...');
       this.setupSmoothScrolling();
       
       // Setup keyboard shortcuts
@@ -87,14 +68,11 @@ class Application {
       // Mark as initialized
       this.isInitialized = true;
       
-      console.log('[CYFT] Application initialized successfully');
       logger.info('Application initialized successfully');
       
       // Track page view
       analyticsService.pageView(window.location.pathname, document.title);
     } catch (error) {
-      console.error('[CYFT] CRITICAL ERROR in app.init():', error);
-      console.error('[CYFT] Stack trace:', error.stack);
       errorTracker.captureError(error, { phase: 'initialization' });
       
       // Show error to user
@@ -505,36 +483,11 @@ class Application {
   }
 }
 
-// Initialize application with error handling
-console.log('[CYFT] Creating Application instance...');
+// Initialize application
+const app = new Application();
+app.init();
 
-try {
-  const app = new Application();
-  console.log('[CYFT] Application instance created, calling init()...');
-  
-  app.init().catch(error => {
-    console.error('[CYFT] FATAL: app.init() promise rejected:', error);
-    console.error('[CYFT] Stack:', error.stack);
-  });
-  
-  // Only expose in development for debugging
-  if (ENV.isDev && typeof window !== 'undefined') {
-    window.__cyftApp = app;
-  }
-  
-  console.log('[CYFT] Main.js execution completed');
-} catch (error) {
-  console.error('[CYFT] FATAL: Failed to create Application instance:', error);
-  console.error('[CYFT] Stack:', error.stack);
-  
-  // Show error in the page
-  document.addEventListener('DOMContentLoaded', () => {
-    document.body.innerHTML = `
-      <div style="padding: 20px; background: #ff0000; color: white; font-family: monospace;">
-        <h1>Application Failed to Start</h1>
-        <p>Error: ${error.message}</p>
-        <pre>${error.stack}</pre>
-      </div>
-    ` + document.body.innerHTML;
-  });
+// Only expose in development for debugging
+if (ENV.isDev && typeof window !== 'undefined') {
+  window.__cyftApp = app;
 } 

@@ -4,13 +4,9 @@
  * This is the ONLY place console methods should exist in the entire codebase
  */
 
-console.log('[CYFT] logger.js module loading...');
-
 // Detect environment using Vite's import.meta.env
 const IS_DEV = import.meta.env?.DEV ?? false;
 const IS_PROD = import.meta.env?.PROD ?? false;
-
-console.log('[CYFT] logger.js environment:', { IS_DEV, IS_PROD, env: import.meta.env });
 
 // Log levels for filtering
 const LOG_LEVELS = {
