@@ -46,7 +46,6 @@ export default defineConfig({
       }
     },
     cssMinify: true,
-    cssCodeSplit: true,
     reportCompressedSize: false,
     chunkSizeWarningLimit: 500
   },
