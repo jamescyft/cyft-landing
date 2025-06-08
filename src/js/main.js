@@ -491,6 +491,15 @@ class Application {
 const app = new Application();
 app.init();
 
+// --- Temporary debug code ---
+// Expose ENV object to the window to check production build variables
+if (typeof window !== 'undefined') {
+  const { ENV } = await import('../config/environment.js');
+  window.__CYFT_ENV = ENV;
+  console.log('CYFT Environment loaded:', window.__CYFT_ENV);
+}
+// --- End temporary debug code ---
+
 // Only expose in development for debugging
 if (ENV.isDev && typeof window !== 'undefined') {
   window.__cyftApp = app;
