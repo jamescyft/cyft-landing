@@ -22,6 +22,7 @@ import { createResourceHints } from './modules/resource-hints.js';
 import { createScrollAnimations } from './modules/scroll-animations.js';
 import { createSectionRevealer } from './modules/section-revealer.js';
 import { createVideoLoader } from './modules/video-loader.js';
+import { createExtensionHandler } from './modules/extension-handler.js';
 
 /**
  * Application Class
@@ -45,6 +46,9 @@ class Application {
    */
   async init() {
     try {
+      // Handle Chrome extensions first to prevent console errors
+      createExtensionHandler();
+      
       // Critical performance optimizations FIRST
       createPreloadScanner();
       createPerformanceMonitor();
