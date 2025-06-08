@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyft Production Debug</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cyft Production Debug</h1>
+    
+    <div class="section">
+        <h2>Environment Info</h2>
+        <div id="env-info"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Console Errors</h2>
+        <div id="console-errors"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Network Resources</h2>
+        <div id="network-resources"></div>
+    </div>
+    
+    <div class="section">
+        <h2>CSP Violations</h2>
+        <div id="csp-violations"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Chrome Extension Detection</h2>
+        <div id="extension-info"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Video Loading Status</h2>
+        <div id="video-status"></div>
+    </div>
+
+    <script>
+        // Capture console errors
+        const errors = [];
+        const originalError = console.error;
+        console.error = function(...args) {
+            errors.push({
+                type: 'error',
+                message: args.join(' '),
+                stack: new Error().stack,
+                timestamp: new Date().toISOString()
+            });
+            originalError.apply(console, args);
+        };
+
+        // Capture warnings
+        const warnings = [];
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            warnings.push({
+                type: 'warning',
+                message: args.join(' '),
+                timestamp: new Date().toISOString()
+            });
+            originalWarn.apply(console, args);
+        };
+
+        // Capture CSP violations
+        const cspViolations = [];
+        document.addEventListener('securitypolicyviolation', (e) => {
+            cspViolations.push({
+                directive: e.violatedDirective,
+                uri: e.blockedURI,
+                source: e.sourceFile,
+                line: e.lineNumber,
+                timestamp: new Date().toISOString()
+            });
+        });
+
+        // Test various features
+        window.addEventListener('load', async () => {
+            // Environment info
+            document.getElementById('env-info').innerHTML = `
+                <p>User Agent: ${navigator.userAgent}</p>
+                <p>Platform: ${navigator.platform}</p>
+                <p>Language: ${navigator.language}</p>
+                <p>Online: ${navigator.onLine ? '<span class="success">Yes</span>' : '<span class="error">No</span>'}</p>
+                <p>Protocol: ${location.protocol}</p>
+                <p>Host: ${location.host}</p>
+                <p>Pathname: ${location.pathname}</p>
+                <p>Production: ${location.hostname !== 'localhost' ? '<span class="success">Yes</span>' : '<span class="warning">No (local)</span>'}</p>
+            `;
+
+            // Chrome extension detection
+            const extensionInfo = [];
+            if (typeof chrome !== 'undefined') {
+                extensionInfo.push('Chrome object detected');
+                if (chrome.runtime) extensionInfo.push('chrome.runtime available');
+                if (chrome.extension) extensionInfo.push('chrome.extension available');
+            } else {
+                extensionInfo.push('Chrome object not detected');
+            }
+            
+            // Common dev tools
+            if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) extensionInfo.push('React DevTools detected');
+            if (window.__VUE_DEVTOOLS_GLOBAL_HOOK__) extensionInfo.push('Vue DevTools detected');
+            if (window.__REDUX_DEVTOOLS_EXTENSION__) extensionInfo.push('Redux DevTools detected');
+            
+            document.getElementById('extension-info').innerHTML = extensionInfo.length > 0 
+                ? '<ul>' + extensionInfo.map(info => `<li>${info}</li>`).join('') + '</ul>'
+                : '<p class="success">No extensions detected</p>';
+
+            // Test video loading
+            const videoTest = document.createElement('video');
+            videoTest.muted = true;
+            videoTest.playsInline = true;
+            
+            const videoStatus = [];
+            videoStatus.push(`<p>Testing video: /assets/videos/hero-video-compressed.mp4</p>`);
+            
+            videoTest.addEventListener('loadstart', () => videoStatus.push('<p class="success">Video load started</p>'));
+            videoTest.addEventListener('loadedmetadata', () => videoStatus.push('<p class="success">Video metadata loaded</p>'));
+            videoTest.addEventListener('canplay', () => videoStatus.push('<p class="success">Video can play</p>'));
+            videoTest.addEventListener('error', (e) => {
+                videoStatus.push(`<p class="error">Video error: ${e.message || 'Unknown error'}</p>`);
+                if (videoTest.error) {
+                    videoStatus.push(`<p class="error">Error code: ${videoTest.error.code}</p>`);
+                    videoStatus.push(`<p class="error">Error message: ${videoTest.error.message}</p>`);
+                }
+            });
+            
+            videoTest.src = '/assets/videos/hero-video-compressed.mp4';
+            
+            // Test network resources
+            const resources = [];
+            try {
+                // Test main.js
+                const jsResponse = await fetch('/src/js/main.js');
+                resources.push(`<p>main.js: <span class="${jsResponse.ok ? 'success' : 'error'}">${jsResponse.status} ${jsResponse.statusText}</span></p>`);
+                
+                // Test CSS
+                const cssResponse = await fetch('/src/css/main.css');
+                resources.push(`<p>main.css: <span class="${cssResponse.ok ? 'success' : 'error'}">${cssResponse.status} ${cssResponse.statusText}</span></p>`);
+                
+                // Test video
+                const videoResponse = await fetch('/assets/videos/hero-video-compressed.mp4', { method: 'HEAD' });
+                resources.push(`<p>hero-video-compressed.mp4: <span class="${videoResponse.ok ? 'success' : 'error'}">${videoResponse.status} ${videoResponse.statusText}</span></p>`);
+            } catch (e) {
+                resources.push(`<p class="error">Network test error: ${e.message}</p>`);
+            }
+            
+            document.getElementById('network-resources').innerHTML = resources.join('');
+            
+            // Display collected errors
+            setTimeout(() => {
+                document.getElementById('console-errors').innerHTML = errors.length > 0
+                    ? '<pre class="error">' + JSON.stringify(errors, null, 2) + '</pre>'
+                    : '<p class="success">No console errors detected</p>';
+                    
+                document.getElementById('csp-violations').innerHTML = cspViolations.length > 0
+                    ? '<pre class="error">' + JSON.stringify(cspViolations, null, 2) + '</pre>'
+                    : '<p class="success">No CSP violations detected</p>';
+                    
+                document.getElementById('video-status').innerHTML = videoStatus.join('');
+            }, 2000);
+        });
+
+        // Capture unhandled errors
+        window.addEventListener('error', (e) => {
+            errors.push({
+                type: 'unhandled',
+                message: e.message,
+                filename: e.filename,
+                line: e.lineno,
+                column: e.colno,
+                timestamp: new Date().toISOString()
+            });
+        });
+
+        // Capture unhandled promise rejections
+        window.addEventListener('unhandledrejection', (e) => {
+            errors.push({
+                type: 'unhandled-promise',
+                reason: e.reason,
+                timestamp: new Date().toISOString()
+            });
+        });
+    </script>
+</body>
+</html> 

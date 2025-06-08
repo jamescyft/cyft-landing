@@ -30,7 +30,7 @@ export class ExtensionHandler {
    */
   wrapChromeRuntime() {
     // Check if chrome runtime exists (from extensions)
-    if (typeof chrome !== 'undefined' && chrome.runtime) {
+    if (typeof chrome !== 'undefined' && chrome && chrome.runtime) {
       const originalSendMessage = chrome.runtime.sendMessage;
       
       // Wrap sendMessage to handle errors
@@ -60,7 +60,9 @@ export class ExtensionHandler {
       };
 
       try {
-        chrome.runtime = new Proxy(chrome.runtime, lastErrorHandler);
+        if (chrome && chrome.runtime) {
+          chrome.runtime = new Proxy(chrome.runtime, lastErrorHandler);
+        }
       } catch (e) {
         // Proxy might fail in some environments
         logger.debug('Could not proxy chrome.runtime');

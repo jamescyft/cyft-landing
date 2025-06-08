@@ -14,6 +14,7 @@ import { errorTracker } from '../services/error-tracker.service.js';
 import { ready, $$, scrollTo } from '../utils/dom.js';
 import { logger } from '../utils/logger.js';
 
+import { createExtensionHandler } from './modules/extension-handler.js';
 import { createFormValidator } from './modules/form-validator.js';
 import { createInteractiveDemo } from './modules/interactive-demo.js';
 import { createPerformanceMonitor } from './modules/performance-monitor.js';
@@ -22,7 +23,6 @@ import { createResourceHints } from './modules/resource-hints.js';
 import { createScrollAnimations } from './modules/scroll-animations.js';
 import { createSectionRevealer } from './modules/section-revealer.js';
 import { createVideoLoader } from './modules/video-loader.js';
-import { createExtensionHandler } from './modules/extension-handler.js';
 
 /**
  * Application Class
