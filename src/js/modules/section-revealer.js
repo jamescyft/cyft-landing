@@ -21,14 +21,12 @@ export class SectionRevealer {
     if (this.isRevealing) return;
     this.isRevealing = true;
 
-    // Use RAF for smooth reveal
+    // Sections are now visible by default, just ensure smooth animations
     requestAnimationFrame(() => {
       this.sections.forEach((section, index) => {
-        // Add a tiny stagger for smoothness
-        setTimeout(() => {
-          section.style.opacity = '1';
-          section.style.transition = 'opacity 0.3s ease-out';
-        }, index * 50); // 50ms stagger
+        // Ensure sections have proper transition for any future animations
+        section.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+        // They should already be visible (opacity: 1) from CSS
       });
     });
   }

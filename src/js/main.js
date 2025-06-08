@@ -3,9 +3,6 @@
  * Initializes all modules and manages application lifecycle
  */
 
-// Import CSS - This ensures proper bundling with Vite
-import '../css/main.css';
-
 import { ERROR_MESSAGES } from '../config/constants.js';
 import { ENV } from '../config/environment.js';
 import { analyticsService } from '../services/analytics.service.js';
