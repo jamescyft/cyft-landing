@@ -16,15 +16,15 @@ export class VideoLoader {
     
     // Production video URLs - UPDATE THESE!
     this.videoUrls = {
-      // For production, use external hosting (CDN, Cloudinary, etc.)
+      // For production, use the same compressed videos that are in the repo
       production: {
-        high: 'https://your-cdn.com/hero-video-high.mp4', // UPDATE THIS!
-        low: 'https://your-cdn.com/hero-video-low.mp4'    // UPDATE THIS!
+        high: '/assets/videos/hero-video-compressed.mp4',  // Already in repo, will deploy with build
+        low: '/assets/videos/hero-video-compressed.mp4'    // Using same file for now until tiny version exists
       },
       // For local dev, use local files
       local: {
         high: '/assets/videos/hero-video-compressed.mp4',  // Use compressed even for "high"
-        low: '/assets/videos/hero-video-tiny.mp4'         // Ultra-compressed for slow connections
+        low: '/assets/videos/hero-video-compressed.mp4'    // Use compressed for low too - tiny doesn't exist
       }
     };
   }
@@ -53,11 +53,8 @@ export class VideoLoader {
     
     const urls = isProduction ? this.videoUrls.production : this.videoUrls.local;
     
-    // Check if production URLs are configured
-    if (isProduction && urls.high.includes('your-cdn.com')) {
-      logger.warn('Production video URLs not configured! Using fallback.');
-      return null; // Will trigger CSS fallback
-    }
+    // Remove the CDN check since we're using local files in production now
+    // The compressed video is already in the repo and will be deployed
     
     return urls[quality];
   }
