@@ -3,7 +3,11 @@
  * Centralized DOM manipulation helpers with error handling
  */
 
+console.log('[CYFT] dom.js module loading...');
+
 import { logger } from './logger.js';
+
+console.log('[CYFT] dom.js imported logger successfully');
 
 /**
  * Safely query a single DOM element
