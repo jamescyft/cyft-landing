@@ -4,6 +4,7 @@
   "devCommand": "npm run dev",
   "installCommand": "npm ci --include=dev",
   "framework": null,
+  "public": true,
   "cleanUrls": true,
   "trailingSlash": false,
   "env": {

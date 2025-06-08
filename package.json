@@ -39,5 +39,8 @@
   ],
   "author": "Cyft",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
