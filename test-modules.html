@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Module Loading Test</title>
+    <style>
+        body { margin: 20px; font-family: monospace; }
+        .test { padding: 10px; margin: 10px 0; border: 2px solid #ccc; }
+        .success { background: #90EE90; border-color: green; }
+        .error { background: #FFB6C1; border-color: red; }
+    </style>
+</head>
+<body>
+    <h1>Module Loading Test</h1>
+    
+    <div id="test1" class="test">
+        Logger module: <span id="logger-result">⏳ Loading...</span>
+    </div>
+    
+    <div id="test2" class="test">
+        Environment module: <span id="env-result">⏳ Loading...</span>
+    </div>
+    
+    <div id="test3" class="test">
+        Main app: <span id="main-result">⏳ Loading...</span>
+    </div>
+    
+    <div id="errors" style="margin-top: 20px; color: red;"></div>
+    
+    <script type="module">
+        const errorsDiv = document.getElementById('errors');
+        
+        // Test 1: Logger module
+        try {
+            const loggerModule = await import('/src/utils/logger.js');
+            document.getElementById('logger-result').textContent = '✅ Loaded: ' + Object.keys(loggerModule).join(', ');
+            document.getElementById('test1').classList.add('success');
+        } catch (e) {
+            document.getElementById('logger-result').textContent = '❌ Error: ' + e.message;
+            document.getElementById('test1').classList.add('error');
+            errorsDiv.innerHTML += '<p>Logger error: ' + e.stack + '</p>';
+        }
+        
+        // Test 2: Environment module
+        try {
+            const envModule = await import('/src/config/environment.js');
+            document.getElementById('env-result').textContent = '✅ Loaded: ' + Object.keys(envModule).join(', ');
+            document.getElementById('test2').classList.add('success');
+        } catch (e) {
+            document.getElementById('env-result').textContent = '❌ Error: ' + e.message;
+            document.getElementById('test2').classList.add('error');
+            errorsDiv.innerHTML += '<p>Environment error: ' + e.stack + '</p>';
+        }
+        
+        // Test 3: Main app
+        try {
+            const mainModule = await import('/src/js/main.js');
+            document.getElementById('main-result').textContent = '✅ Loaded successfully';
+            document.getElementById('test3').classList.add('success');
+        } catch (e) {
+            document.getElementById('main-result').textContent = '❌ Error: ' + e.message;
+            document.getElementById('test3').classList.add('error');
+            errorsDiv.innerHTML += '<p>Main error: ' + e.stack + '</p>';
+        }
+    </script>
+</body>
+</html> 

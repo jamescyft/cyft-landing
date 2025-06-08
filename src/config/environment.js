@@ -4,8 +4,6 @@
  * NO MORE COMMENTED PRODUCTION CODE!
  */
 
-import { logger } from '../utils/logger.js';
-
 // Environment detection using Vite
 export const ENV = {
   isDev: import.meta.env?.DEV ?? false,
@@ -81,6 +79,7 @@ export const getApiUrl = (endpoint) => {
  */
 export const devLog = (...args) => {
   if (ENV.isDev || ENV.features.debugMode) {
-    logger.debug('[DEV]', ...args);
+    // Use console directly in dev mode instead of logger to avoid circular dependency
+    console.log('[DEV]', ...args);
   }
 }; 
