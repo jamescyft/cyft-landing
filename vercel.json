@@ -13,7 +13,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src * 'unsafe-inline' 'unsafe-eval' data: blob: chrome-extension: moz-extension:; script-src * 'unsafe-inline' 'unsafe-eval' chrome-extension: moz-extension:; object-src 'none'; base-uri 'self'; frame-ancestors 'self' https://*.vercel.app https://vercel.com;"
+          "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https: wss: chrome-extension: moz-extension:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: chrome-extension: moz-extension:; style-src 'self' 'unsafe-inline' https: chrome-extension: moz-extension:; img-src 'self' data: https: blob: chrome-extension: moz-extension:; font-src 'self' https: data:; media-src 'self' https: blob:; connect-src 'self' https: wss: chrome-extension: moz-extension:; frame-src 'self' https: chrome-extension: moz-extension:; object-src 'none'; base-uri 'self'; form-action 'self' https:; frame-ancestors 'self' https://*.vercel.app https://vercel.com;"
         },
         {
           "key": "X-Content-Type-Options",
