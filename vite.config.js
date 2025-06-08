@@ -16,20 +16,10 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html')
       },
       output: {
-        // Code splitting for better caching
-        manualChunks(id) {
-          // Separate vendor chunks
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
-          // Separate large modules
-          if (id.includes('scenarios.js')) {
-            return 'scenarios';
-          }
-          if (id.includes('interactive-demo.js')) {
-            return 'demo';
-          }
-        }
+        // Emit a single self-contained bundle so the site works under
+        // strict `script-src 'self'` CSPs (no blob: / eval required).
+        inlineDynamicImports: true,
+        manualChunks: undefined
       }
     },
     // Optimize for production
