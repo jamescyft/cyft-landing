@@ -4,9 +4,18 @@
  * This is the ONLY place console methods should exist in the entire codebase
  */
 
-// Detect environment using Vite's import.meta.env
-const IS_DEV = import.meta.env?.DEV ?? false;
-const IS_PROD = import.meta.env?.PROD ?? false;
+// Detect environment using Vite's import.meta.env with safer fallbacks
+let IS_DEV = false;
+let IS_PROD = true;
+
+try {
+  if (import.meta && import.meta.env) {
+    IS_DEV = import.meta.env.DEV || false;
+    IS_PROD = import.meta.env.PROD || true;
+  }
+} catch (e) {
+  // import.meta not available, use defaults
+}
 
 // Log levels for filtering
 const LOG_LEVELS = {

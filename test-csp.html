@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSP Test</title>
+</head>
+<body>
+    <h1>CSP Header Test</h1>
+    <div id="csp-info"></div>
+    <div id="script-test">Script not executed</div>
+    
+    <script>
+        // Basic script execution test
+        document.getElementById('script-test').textContent = 'Script executed successfully!';
+        
+        // Try to get CSP info
+        const cspInfo = document.getElementById('csp-info');
+        
+        // Check if CSP is blocking eval
+        try {
+            eval('1 + 1');
+            cspInfo.innerHTML += '<p style="color: green;">✓ eval() works</p>';
+        } catch (e) {
+            cspInfo.innerHTML += '<p style="color: red;">✗ eval() blocked: ' + e.message + '</p>';
+        }
+        
+        // Check if CSP is blocking Function constructor
+        try {
+            new Function('return 1 + 1')();
+            cspInfo.innerHTML += '<p style="color: green;">✓ new Function() works</p>';
+        } catch (e) {
+            cspInfo.innerHTML += '<p style="color: red;">✗ new Function() blocked: ' + e.message + '</p>';
+        }
+        
+        // Check module scripts
+        cspInfo.innerHTML += '<p>Check Network tab for CSP response header</p>';
+    </script>
+</body>
+</html> 
