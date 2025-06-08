@@ -17,7 +17,8 @@ export class InteractiveDemo {
     this.state = {
       isRunning: false,
       currentScenarioIndex: 0,
-      currentFeature: 0
+      currentFeature: 0,
+      hasClosedTicketOverlay: false // Track if user has seen the ticket details
     };
     
     // Ticket Closure Features - What actually happens when closing tickets
@@ -131,6 +132,11 @@ export class InteractiveDemo {
     
     if (this.elements.resetButton) {
       this.elements.resetButton.addEventListener('click', () => this.reset());
+    }
+    
+    // Initially hide the reset section until user closes ticket overlay
+    if (this.elements.resetSection) {
+      this.elements.resetSection.style.display = 'none';
     }
   }
   
@@ -535,6 +541,53 @@ export class InteractiveDemo {
     
     const { doc } = this.currentTicketData;
     
+    // Parse the client facing notes for display
+    const clientNotes = doc.clientFacingNotes || '';
+    const clientLines = clientNotes.split('\n').filter(line => line.trim());
+    
+    // Extract customer-facing sections
+    const customerSections = {};
+    let currentKey = '';
+    clientLines.forEach(line => {
+      if (line.startsWith('Summary:')) {
+        currentKey = 'summary';
+        customerSections[currentKey] = line.replace('Summary:', '').trim();
+      } else if (line.startsWith('Resolution:')) {
+        currentKey = 'resolution';
+        customerSections[currentKey] = line.replace('Resolution:', '').trim();
+      } else if (line.startsWith('Next Steps:')) {
+        currentKey = 'nextSteps';
+        customerSections[currentKey] = line.replace('Next Steps:', '').trim();
+      } else if (currentKey && line.trim()) {
+        customerSections[currentKey] += ' ' + line.trim();
+      }
+    });
+    
+    // Parse internal technical notes
+    const internalNotes = doc.internalTechNotes || '';
+    const internalLines = internalNotes.split('\n').filter(line => line.trim());
+    
+    // Extract internal sections
+    const internalSections = {};
+    let currentSection = '';
+    internalLines.forEach(line => {
+      if (line.startsWith('Observation:')) {
+        currentSection = 'observation';
+        internalSections[currentSection] = line.replace('Observation:', '').trim();
+      } else if (line.startsWith('Hypothesis:')) {
+        currentSection = 'hypothesis';
+        internalSections[currentSection] = line.replace('Hypothesis:', '').trim();
+      } else if (line.startsWith('Actions:')) {
+        currentSection = 'actions';
+        internalSections[currentSection] = line.replace('Actions:', '').trim();
+      } else if (line.startsWith('Result:')) {
+        currentSection = 'result';
+        internalSections[currentSection] = line.replace('Result:', '').trim();
+      } else if (currentSection && line.trim()) {
+        internalSections[currentSection] += ' ' + line.trim();
+      }
+    });
+    
     // Create the glass pane overlay
     const glassPane = document.createElement('div');
     glassPane.className = 'cyft-glass-pane';
@@ -549,92 +602,121 @@ export class InteractiveDemo {
           <div class="glass-header-main">
             <h2 class="glass-title">Ticket Closure Complete</h2>
             <div class="glass-subtitle">
-              <span class="ticket-id">${doc.systemUpdates?.cwTicket || 'AUTO-47291'}</span>
+              <span class="ticket-id">${doc.systemUpdates?.cwTicket || 'Ticket Closed'}</span>
             </div>
           </div>
           <button class="glass-close" aria-label="Close">×</button>
         </div>
         
         <div class="glass-pane-body">
-          <!-- Row 1: Client Communication -->
-          <div class="glass-info-row client-comm">
+          <!-- Row 1: Customer-Facing Notes -->
+          <div class="glass-info-row customer-notes">
             <div class="row-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
               </svg>
             </div>
             <div class="row-content">
-              <h3 class="row-title">Client Communication</h3>
-              <div class="info-grid">
-                <div class="info-item">
-                  <span class="info-label">Issue</span>
-                  <span class="info-value">File server outage affecting patient record access</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Resolution</span>
-                  <span class="info-value">RAID array failure resolved with matching drive replacement</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Outcome</span>
-                  <span class="info-value">All systems operational • Zero data loss • Backup verified</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Next Steps</span>
-                  <span class="info-value">Infrastructure refresh consultation recommended</span>
-                </div>
+              <h3 class="row-title">Customer-Facing Notes</h3>
+              <div class="customer-sections">
+                ${customerSections.summary ? `
+                  <div class="customer-section">
+                    <h4 class="section-label">Summary</h4>
+                    <p class="section-content">${customerSections.summary}</p>
+                  </div>
+                ` : ''}
+                ${customerSections.resolution ? `
+                  <div class="customer-section">
+                    <h4 class="section-label">Resolution</h4>
+                    <p class="section-content">${customerSections.resolution}</p>
+                  </div>
+                ` : ''}
+                ${customerSections.nextSteps ? `
+                  <div class="customer-section">
+                    <h4 class="section-label">Next Steps</h4>
+                    <p class="section-content">${customerSections.nextSteps}</p>
+                  </div>
+                ` : ''}
               </div>
               <div class="row-meta">
+                <span class="meta-tag">Business Outcomes</span>
+                <span class="meta-tag">Non-Technical</span>
                 <span class="meta-tag">Portal Ready</span>
-                <span class="meta-tag">Professional Format</span>
-                <span class="meta-tag">Auto-generated</span>
               </div>
             </div>
           </div>
           
-          <!-- Row 2: Technical Documentation -->
-          <div class="glass-info-row tech-docs">
+          <!-- Row 2: Internal Notes -->
+          <div class="glass-info-row internal-notes">
             <div class="row-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
               </svg>
             </div>
             <div class="row-content">
-              <h3 class="row-title">Technical Documentation</h3>
-              <div class="tech-details">
-                <div class="tech-section">
-                  <h4 class="tech-section-title">Hardware</h4>
-                  <ul class="tech-list">
-                    <li>Dell PowerEdge R720, RAID 5 configuration</li>
-                    <li>Failed drives: 2TB Seagate ST2000NM0023</li>
-                    <li>Serial numbers matched for compatibility</li>
-                  </ul>
-                </div>
-                <div class="tech-section">
-                  <h4 class="tech-section-title">Process</h4>
-                  <ul class="tech-list">
-                    <li>Dual drive failure diagnosed (drives 2 & 4)</li>
-                    <li>Array rebuild completed (~3 hours)</li>
-                    <li>All shares tested and verified</li>
-                  </ul>
-                </div>
-                <div class="tech-section">
-                  <h4 class="tech-section-title">Timeline</h4>
-                  <ul class="tech-list">
-                    <li>6:00 AM - On-site arrival & diagnosis</li>
-                    <li>7:30 AM - Parts procurement completed</li>
-                    <li>11:00 AM - Array rebuild finished</li>
-                  </ul>
-                </div>
+              <h3 class="row-title">Internal Notes</h3>
+              <div class="internal-sections">
+                ${internalSections.observation ? `
+                  <div class="internal-section">
+                    <h4 class="section-label">Observation</h4>
+                    <p class="section-content technical">${internalSections.observation}</p>
+                  </div>
+                ` : ''}
+                ${internalSections.hypothesis ? `
+                  <div class="internal-section">
+                    <h4 class="section-label">Hypothesis</h4>
+                    <p class="section-content technical">${internalSections.hypothesis}</p>
+                  </div>
+                ` : ''}
+                ${internalSections.actions ? `
+                  <div class="internal-section">
+                    <h4 class="section-label">Actions</h4>
+                    <p class="section-content technical">${internalSections.actions}</p>
+                  </div>
+                ` : ''}
+                ${internalSections.result ? `
+                  <div class="internal-section">
+                    <h4 class="section-label">Result</h4>
+                    <p class="section-content technical">${internalSections.result}</p>
+                  </div>
+                ` : ''}
               </div>
               <div class="row-meta">
+                <span class="meta-tag">Technical Detail</span>
                 <span class="meta-tag">KB Indexed</span>
-                <span class="meta-tag">Searchable</span>
                 <span class="meta-tag">Future Reference</span>
               </div>
             </div>
           </div>
           
-          <!-- Row 3: Time & Billing -->
+          <!-- Row 3: Technical Documentation (SOP) -->
+          <div class="glass-info-row tech-docs">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12h1.5M9 16h1.5M13 8h8m-8 4h8m-8 4h8M5 3v18l3.5-3 3.5 3V3"/>
+              </svg>
+            </div>
+            <div class="row-content">
+              <h3 class="row-title">Technical Documentation</h3>
+              <div class="tech-details">
+                ${doc.technicalDocumentation ? doc.technicalDocumentation.map(section => `
+                  <div class="tech-section">
+                    <h4 class="tech-section-title">${section.title}</h4>
+                    <ul class="tech-list">
+                      ${section.items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                  </div>
+                `).join('') : ''}
+              </div>
+              <div class="row-meta">
+                <span class="meta-tag">SOP Reference</span>
+                <span class="meta-tag">KB Indexed</span>
+                <span class="meta-tag">Searchable</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Row 4: Time & Billing -->
           <div class="glass-info-row time-billing">
             <div class="row-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -647,27 +729,20 @@ export class InteractiveDemo {
               <div class="billing-breakdown">
                 <div class="billing-summary">
                   <div class="total-time-display">
-                    <span class="time-number">${doc.timeEntry?.duration || '4.2 hours'}</span>
-                    <span class="time-rate">${doc.timeEntry?.billable || 'Emergency Rate'}</span>
+                    <span class="time-number">${doc.timeEntry?.duration || '0.0 hours'}</span>
+                    <span class="time-rate">${doc.timeEntry?.billable || 'Standard Rate'}</span>
                   </div>
                 </div>
                 <div class="time-breakdown">
-                  <div class="breakdown-item">
-                    <span class="breakdown-task">Travel & Diagnosis</span>
-                    <span class="breakdown-time">1.2 hrs</span>
-                  </div>
-                  <div class="breakdown-item">
-                    <span class="breakdown-task">Parts Procurement</span>
-                    <span class="breakdown-time">1.0 hrs</span>
-                  </div>
-                  <div class="breakdown-item">
-                    <span class="breakdown-task">Drive Replacement</span>
-                    <span class="breakdown-time">0.5 hrs</span>
-                  </div>
-                  <div class="breakdown-item">
-                    <span class="breakdown-task">Rebuild & Testing</span>
-                    <span class="breakdown-time">1.5 hrs</span>
-                  </div>
+                  ${doc.timeEntry?.breakdown ? doc.timeEntry.breakdown.map(item => {
+                    const [task, time] = item.split(':').map(s => s.trim());
+                    return `
+                      <div class="breakdown-item">
+                        <span class="breakdown-task">${task || item}</span>
+                        <span class="breakdown-time">${time || ''}</span>
+                      </div>
+                    `;
+                  }).join('') : ''}
                 </div>
               </div>
               <div class="row-meta">
@@ -678,7 +753,7 @@ export class InteractiveDemo {
             </div>
           </div>
           
-          <!-- Row 4: PSA Integration Status -->
+          <!-- Row 5: PSA Integration Status -->
           <div class="glass-info-row psa-sync">
             <div class="row-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -688,26 +763,15 @@ export class InteractiveDemo {
             <div class="row-content">
               <h3 class="row-title">System Synchronization</h3>
               <div class="sync-status-grid">
-                <div class="sync-item completed">
-                  <span class="sync-system">ConnectWise Ticket</span>
-                  <span class="sync-status">Updated & Closed</span>
-                </div>
-                <div class="sync-item completed">
-                  <span class="sync-system">Asset Management</span>
-                  <span class="sync-status">Hardware Records Updated</span>
-                </div>
-                <div class="sync-item completed">
-                  <span class="sync-system">Time Tracking</span>
-                  <span class="sync-status">Emergency Hours Logged</span>
-                </div>
-                <div class="sync-item completed">
-                  <span class="sync-system">Client Portal</span>
-                  <span class="sync-status">Resolution Posted</span>
-                </div>
-                <div class="sync-item completed">
-                  <span class="sync-system">Follow-up Tasks</span>
-                  <span class="sync-status">Infrastructure Review Scheduled</span>
-                </div>
+                ${Object.entries(doc.systemUpdates || {}).map(([system, status]) => {
+                  const systemName = system.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                  return `
+                    <div class="sync-item completed">
+                      <span class="sync-system">${systemName}</span>
+                      <span class="sync-status">${status}</span>
+                    </div>
+                  `;
+                }).join('')}
               </div>
               <div class="row-meta">
                 <span class="meta-tag success">All Systems Synchronized</span>
@@ -722,23 +786,26 @@ export class InteractiveDemo {
     // Append directly to body - escaping ALL containers
     document.body.appendChild(glassPane);
     
-    // Close functionality
-    const closeBtn = glassPane.querySelector('.glass-close');
-    closeBtn.addEventListener('click', () => {
+    // Close functionality with improved UX flow
+    const handleOverlayClose = () => {
       glassPane.classList.add('closing');
       setTimeout(() => {
         document.body.removeChild(glassPane);
+        
+        // If this is the first time user is closing the overlay, show the clean transition
+        if (!this.state.hasClosedTicketOverlay) {
+          this.state.hasClosedTicketOverlay = true;
+          this.showCleanScenariosTransition();
+        }
       }, 500);
-    });
+    };
+    
+    const closeBtn = glassPane.querySelector('.glass-close');
+    closeBtn.addEventListener('click', handleOverlayClose);
     
     // Also close on backdrop click
     const backdrop = glassPane.querySelector('.glass-pane-backdrop');
-    backdrop.addEventListener('click', () => {
-      glassPane.classList.add('closing');
-      setTimeout(() => {
-        document.body.removeChild(glassPane);
-      }, 500);
-    });
+    backdrop.addEventListener('click', handleOverlayClose);
     
     // Trigger slide-up animation after a brief delay
     requestAnimationFrame(() => {
@@ -748,10 +815,169 @@ export class InteractiveDemo {
     });
   }
   
+  /**
+   * Show clean transition to scenarios button after user closes ticket overlay
+   */
+  showCleanScenariosTransition() {
+    // Preserve current scroll position and prevent scroll jumping
+    const currentScrollY = window.scrollY;
+    const demoContainer = this.container;
+    
+    // Lock scroll temporarily to prevent jump
+    document.body.style.overflow = 'hidden';
+    
+    // Fade out all the demo content smoothly
+    const elementsToHide = [
+      this.elements.splitView,
+      this.elements.docOutput
+    ];
+    
+    elementsToHide.forEach(element => {
+      if (element) {
+        element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(-20px)';
+      }
+    });
+    
+    // After the fade out completes, hide elements and show the scenarios button
+    setTimeout(() => {
+      elementsToHide.forEach(element => {
+        if (element) {
+          element.style.display = 'none';
+        }
+      });
+      
+      // Create a beautiful scenarios prompt with fixed height to prevent layout shift
+      const scenariosPrompt = document.createElement('div');
+      scenariosPrompt.className = 'scenarios-prompt';
+      scenariosPrompt.innerHTML = `
+        <div class="scenarios-prompt__content">
+          <h3 class="scenarios-prompt__title">Perfect documentation, every time.</h3>
+          <p class="scenarios-prompt__subtitle">See how Cyft handles different scenarios</p>
+          <button class="btn btn--primary btn--large scenarios-btn">
+            See More Scenarios
+          </button>
+        </div>
+      `;
+      
+      // Insert the prompt where the demo content was
+      this.container.appendChild(scenariosPrompt);
+      
+             // Restore scroll behavior after a brief delay
+       setTimeout(() => {
+         document.body.style.overflow = '';
+         
+         // Center the scenarios prompt in the viewport
+         const newContainerRect = demoContainer.getBoundingClientRect();
+         const viewportHeight = window.innerHeight;
+         const containerHeight = newContainerRect.height;
+         
+         // Calculate ideal scroll position to center the container
+         const idealCenterY = (viewportHeight - containerHeight) / 2;
+         const targetScrollY = currentScrollY + newContainerRect.top - idealCenterY;
+         
+         // Smooth scroll to center the prompt
+         window.scrollTo({
+           top: Math.max(0, targetScrollY),
+           behavior: 'smooth'
+         });
+       }, 100);
+      
+      // Animate in the prompt
+      requestAnimationFrame(() => {
+        scenariosPrompt.style.opacity = '0';
+        scenariosPrompt.style.transform = 'translateY(20px)';
+        scenariosPrompt.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+        
+        requestAnimationFrame(() => {
+          scenariosPrompt.style.opacity = '1';
+          scenariosPrompt.style.transform = 'translateY(0)';
+        });
+      });
+      
+      // Add click handler for the new scenarios button
+      const scenariosBtn = scenariosPrompt.querySelector('.scenarios-btn');
+      if (scenariosBtn) {
+        scenariosBtn.addEventListener('click', () => {
+          // Preserve scroll position during reset
+          const resetScrollY = window.scrollY;
+          
+          // Remove the prompt and immediately start next scenario
+          scenariosPrompt.style.transition = 'opacity 0.4s ease-out';
+          scenariosPrompt.style.opacity = '0';
+          
+          setTimeout(() => {
+            scenariosPrompt.remove();
+            
+            // Restore scroll position before reset
+            window.scrollTo(0, resetScrollY);
+            this.resetAndStartImmediately();
+          }, 400);
+        });
+      }
+    }, 600);
+  }
+  
+  resetAndStartImmediately() {
+    // Next scenario
+    this.state.currentScenarioIndex = (this.state.currentScenarioIndex + 1) % DEMO_SCENARIOS.length;
+    this.state.currentFeature = 0;
+    this.state.hasClosedTicketOverlay = false;
+    this.state.isRunning = false; // Ensure we can start immediately
+    
+    // Remove any existing scenarios prompt
+    const existingPrompt = this.container.querySelector('.scenarios-prompt');
+    if (existingPrompt) {
+      existingPrompt.remove();
+    }
+    
+    // Clean reset immediately (no smooth animation needed)
+    this.elements.splitView.classList.remove('is-visible');
+    this.elements.splitView.style.opacity = '';
+    this.elements.splitView.style.transform = '';
+    this.elements.splitView.style.display = '';
+    this.elements.docOutput.classList.remove('is-visible');
+    this.elements.docOutput.style.opacity = '';
+    this.elements.docOutput.style.transform = '';
+    this.elements.docOutput.style.display = '';
+    this.elements.resetSection.classList.remove('is-visible');
+    this.elements.resetSection.style.display = 'none';
+    
+    // Clear content
+    this.elements.typingContent.innerHTML = '<span class="demo__cursor">|</span>';
+    this.elements.speechContent.innerHTML = '';
+    this.elements.docContent.innerHTML = '';
+    
+    // Remove trackers
+    const tracker = document.querySelector('.intelligent-tracker');
+    if (tracker) tracker.remove();
+    
+    // Reset processing
+    this.elements.processingArea.style.opacity = '1';
+    this.elements.processingArea.querySelector('.demo__processing-text').textContent = 'Cyft listening to debrief...';
+    
+    // Hide voice section (we won't show it to user)
+    this.elements.voiceSection.style.display = 'none';
+    this.elements.voiceSection.style.opacity = '0';
+    
+    // Immediately start the next scenario without user interaction
+    setTimeout(() => {
+      this.start();
+    }, 200);
+  }
+
   reset() {
     // Next scenario
     this.state.currentScenarioIndex = (this.state.currentScenarioIndex + 1) % DEMO_SCENARIOS.length;
     this.state.currentFeature = 0;
+    this.state.hasClosedTicketOverlay = false; // Reset for new scenario
+    
+    // Remove any existing scenarios prompt
+    const existingPrompt = this.container.querySelector('.scenarios-prompt');
+    if (existingPrompt) {
+      existingPrompt.remove();
+    }
     
     // Smooth reset
     this.elements.splitView.style.transition = 'opacity 0.4s ease-out';
@@ -761,8 +987,14 @@ export class InteractiveDemo {
       // Clean reset
       this.elements.splitView.classList.remove('is-visible');
       this.elements.splitView.style.opacity = '';
+      this.elements.splitView.style.transform = '';
+      this.elements.splitView.style.display = '';
       this.elements.docOutput.classList.remove('is-visible');
+      this.elements.docOutput.style.opacity = '';
+      this.elements.docOutput.style.transform = '';
+      this.elements.docOutput.style.display = '';
       this.elements.resetSection.classList.remove('is-visible');
+      this.elements.resetSection.style.display = 'none'; // Hide until overlay is closed
       
       // Clear content
       this.elements.typingContent.innerHTML = '<span class="demo__cursor">|</span>';

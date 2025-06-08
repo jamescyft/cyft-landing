@@ -7,13 +7,12 @@
 /* Prevent layout shift */
 html {
   font-size: 100%;
-  -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
 /* Critical fonts - prevent FOIT */
 @font-face {
-  font-family: 'system-ui';
+  font-family: system-ui;
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -58,6 +57,7 @@ body {
   letter-spacing: 0.15em;
   color: #666;
   text-transform: uppercase;
+
   /* NO OPACITY 0! This was causing the flash! */
   opacity: 0.7;
   display: inline-block;
@@ -79,6 +79,7 @@ body {
   line-height: 1.1;
   margin: 0;
   color: #000;
+
   /* Start visible! */
   opacity: 1;
 }
@@ -160,11 +161,11 @@ body {
 /* Smooth animations after load */
 @media (prefers-reduced-motion: no-preference) {
   .a-simple-fade-in {
-    animation: simpleFadeIn 0.8s ease-out forwards;
+    animation: simple-fade-in 0.8s ease-out forwards;
   }
 }
 
-@keyframes simpleFadeIn {
+@keyframes simple-fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 } 

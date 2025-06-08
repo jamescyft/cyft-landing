@@ -56,8 +56,8 @@ export class PreloadScanner {
 
   // Prevent any layout thrashing
   preventLayoutThrash() {
-    let reads = [];
-    let writes = [];
+    const reads = [];
+    const writes = [];
     let scheduled = false;
 
     const scheduleFlush = () => {

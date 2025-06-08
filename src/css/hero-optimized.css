@@ -7,6 +7,7 @@
 .animated-background {
   position: absolute;
   inset: 0;
+
   /* Subtle water-like gradient that matches video theme */
   background: linear-gradient(135deg, #f5f7fa 0%, #e1e5eb 40%, #c3cbd6 100%);
   z-index: 1;

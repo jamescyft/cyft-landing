@@ -1,0 +1,37 @@
+# Development files and folders
+.vscode/
+docs/
+tests/
+node_modules/
+
+# Shell scripts
+*.sh
+check-video-status.sh
+compress-video.sh
+
+# Documentation (except README)
+DEPLOYMENT_READY.md
+EMERGENCY_VIDEO_SOLUTION.md
+VIDEO_DEPLOYMENT_GUIDE.md
+PERFORMANCE_OPTIMIZATIONS.md
+
+# Development configuration
+.eslintrc.json
+.prettierrc.json
+.stylelintrc.json
+postcss.config.js
+
+# Environment example
+env.example
+
+# Git files
+.gitignore
+
+# Package files (keep package.json for some deployment platforms)
+package-lock.json
+
+# Source files (if deploying only dist)
+# Uncomment these if you're deploying only the dist folder
+# src/
+# index.html
+# vite.config.js 

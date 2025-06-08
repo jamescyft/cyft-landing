@@ -16,12 +16,12 @@ import { logger } from '../utils/logger.js';
 
 import { createFormValidator } from './modules/form-validator.js';
 import { createInteractiveDemo } from './modules/interactive-demo.js';
-import { createScrollAnimations } from './modules/scroll-animations.js';
-import { createVideoLoader } from './modules/video-loader.js';
 import { createPerformanceMonitor } from './modules/performance-monitor.js';
-import { createSectionRevealer } from './modules/section-revealer.js';
-import { createResourceHints } from './modules/resource-hints.js';
 import { createPreloadScanner } from './modules/preload-scanner.js';
+import { createResourceHints } from './modules/resource-hints.js';
+import { createScrollAnimations } from './modules/scroll-animations.js';
+import { createSectionRevealer } from './modules/section-revealer.js';
+import { createVideoLoader } from './modules/video-loader.js';
 
 /**
  * Application Class
@@ -226,7 +226,7 @@ class Application {
       // Reset button state
       if (submitButton) {
         submitButton.disabled = false;
-        submitButton.textContent = 'Request invitation';
+        submitButton.textContent = 'request invitation';
         submitButton.classList.remove('is-loading');
       }
     }

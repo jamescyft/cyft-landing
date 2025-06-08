@@ -98,7 +98,6 @@ export class PerformanceMonitor {
 
   observeCLS() {
     let clsValue = 0;
-    let clsEntries = [];
     let sessionValue = 0;
     let sessionEntries = [];
 
@@ -117,7 +116,6 @@ export class PerformanceMonitor {
               // Store session if it's the largest
               if (sessionValue > clsValue) {
                 clsValue = sessionValue;
-                clsEntries = [...sessionEntries];
               }
               sessionValue = entry.value;
               sessionEntries = [entry];
