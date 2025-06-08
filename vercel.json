@@ -32,7 +32,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|favicon\\.svg|.*\\.js|.*\\.css|.*\\.mp4|.*\\.jpg|.*\\.png|.*\\.gif|.*\\.svg|.*\\.ico).*)",
+      "source": "/:path((?!assets|favicon\\.svg).*)",
       "destination": "/index.html"
     }
   ]
