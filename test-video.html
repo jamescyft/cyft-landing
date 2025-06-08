@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Test</title>
+    <style>
+        body { margin: 0; background: #000; }
+        video { width: 100%; height: 100vh; object-fit: cover; }
+        .status { position: fixed; top: 10px; left: 10px; color: white; background: rgba(0,0,0,0.8); padding: 10px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">Loading...</div>
+    <video id="test-video" muted loop playsinline autoplay>
+        <source src="/assets/videos/hero-video-compressed.mp4" type="video/mp4">
+    </video>
+    <script>
+        const video = document.getElementById('test-video');
+        const status = document.getElementById('status');
+        
+        video.addEventListener('loadstart', () => status.textContent = 'Load started...');
+        video.addEventListener('loadedmetadata', () => status.textContent = 'Metadata loaded...');
+        video.addEventListener('loadeddata', () => status.textContent = 'Data loaded...');
+        video.addEventListener('canplay', () => status.textContent = 'Can play!');
+        video.addEventListener('canplaythrough', () => status.textContent = 'Can play through!');
+        video.addEventListener('playing', () => status.textContent = 'PLAYING! ✅');
+        video.addEventListener('error', (e) => {
+            const error = video.error;
+            status.textContent = `ERROR: ${error ? error.message : 'Unknown'} (Code: ${error ? error.code : 'N/A'})`;
+            console.error('Video error:', e, video.error);
+        });
+        
+        // Try to play
+        video.play().catch(e => {
+            status.textContent = `Play failed: ${e.message}`;
+            console.error('Play failed:', e);
+        });
+    </script>
+</body>
+</html> 
