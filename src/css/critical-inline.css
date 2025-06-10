@@ -28,8 +28,9 @@ body {
   color: #1a1a1a;
   background: #fff;
   min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Use subpixel-antialiased for better Chrome compatibility */
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
 }
 
 /* Hero section critical styles */
@@ -116,9 +117,10 @@ body {
   opacity: 1;
 }
 
-/* Hide non-critical sections initially */
+/* Start sections visible to prevent blank page */
 .section:not(.section--hero) {
-  opacity: 0;
+  opacity: 1;
+  /* JavaScript will enhance with animations, not gate visibility */
 }
 
 /* Critical button styles */
@@ -143,6 +145,20 @@ body {
 /* Prevent CLS from demo container */
 .demo__container {
   min-height: 600px;
+  /* Ensure stable layout during JS initialization */
+  contain: layout style;
+  will-change: auto; /* Only optimize when needed */
+}
+
+/* Prevent layout shifts from form elements */
+.form__input {
+  min-height: 48px; /* Stable height for all form inputs */
+}
+
+/* Stable button dimensions */
+.btn {
+  min-height: 48px;
+  min-width: 120px;
 }
 
 /* Hide only form success initially */
@@ -168,4 +184,22 @@ body {
 @keyframes simple-fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fallback for when JavaScript fails to load */
+.no-js .section:not(.section--hero) {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.no-js .demo__container {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Enhanced accessibility without JavaScript */
+.no-js .btn {
+  /* Ensure buttons are always accessible */
+  opacity: 1 !important;
+  pointer-events: auto !important;
 } 

@@ -152,24 +152,47 @@ export class InteractiveDemo {
     // Add a subtle pulse to the mic button
     this.elements.micButton.classList.add('is-active');
     
-    // Wait for expansion animation to complete
-    setTimeout(() => {
-      // Remove pulse effect
-      this.elements.micButton.classList.remove('is-active');
-      
-      // Smooth transition to workflow
-      this.elements.voiceSection.style.transition = 'opacity 0.4s ease-out';
-      this.elements.voiceSection.style.opacity = '0';
-      
-      setTimeout(() => {
-        this.elements.voiceSection.style.display = 'none';
-        this.elements.splitView.classList.add('is-visible');
-        
-        setTimeout(() => {
-          this.runTicketClosureWorkflow(scenario);
-        }, 400);
-      }, 400);
-    }, 600); // Wait for container expansion
+    // Use a more reliable timing approach for animation sequencing
+    this.animateStart(scenario);
+  }
+  
+  /**
+   * Improved animation sequencing using requestAnimationFrame
+   */
+  async animateStart(scenario) {
+    // Wait for expansion animation to complete using RAF instead of setTimeout
+    await this.waitForAnimationFrame(600);
+    
+    // Remove pulse effect
+    this.elements.micButton.classList.remove('is-active');
+    
+    // Smooth transition to workflow
+    this.elements.voiceSection.style.transition = 'opacity 0.4s ease-out';
+    this.elements.voiceSection.style.opacity = '0';
+    
+    await this.waitForAnimationFrame(400);
+    
+    this.elements.voiceSection.style.display = 'none';
+    this.elements.splitView.classList.add('is-visible');
+    
+    await this.waitForAnimationFrame(400);
+    
+    this.runTicketClosureWorkflow(scenario);
+  }
+  
+  /**
+   * More reliable timing using requestAnimationFrame
+   */
+  waitForAnimationFrame(delay = 0) {
+    return new Promise(resolve => {
+      if (delay <= 0) {
+        requestAnimationFrame(resolve);
+      } else {
+        requestAnimationFrame(() => {
+          setTimeout(resolve, delay);
+        });
+      }
+    });
   }
   
   async runTicketClosureWorkflow(scenario) {

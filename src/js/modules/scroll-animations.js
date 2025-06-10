@@ -147,7 +147,17 @@ export class ScrollAnimations {
     const elements = $$(selector);
     
     elements.forEach(element => {
-      this.observe(element);
+      // Check if element is already in viewport
+      if (this.isInViewport(element)) {
+        // Immediately animate elements already in view
+        this.animateElement(element, {
+          animationClass: this.options.animationClass,
+          visibleClass: this.options.visibleClass,
+          delay: 0
+        });
+      } else {
+        this.observe(element);
+      }
     });
   }
   

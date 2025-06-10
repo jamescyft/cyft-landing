@@ -11,6 +11,8 @@ export default defineConfig({
     emptyOutDir: true,
     assetsInlineLimit: 0,
     cssCodeSplit: false,
+    // Disable module preload to prevent Chrome timing issues
+    modulePreload: false,
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html')
@@ -44,6 +46,14 @@ export default defineConfig({
     port: 3000,
     open: true,
     cors: true
+  },
+  
+  preview: {
+    port: 4173,
+    headers: {
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff'
+    }
   },
   
   css: {

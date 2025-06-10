@@ -7,13 +7,7 @@
 export class ResourceHints {
   constructor() {
     this.criticalResources = [
-      // Preconnect to potential CDNs
-      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-      { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
-      
-      // Preload critical fonts with proper CORS
-      { rel: 'preload', as: 'font', type: 'font/woff2', crossorigin: 'anonymous',
-        href: 'data:font/woff2;base64,d09GMgABAAAAAAIAAA4AAAAABQAAAAGxAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbBxwaBmAANBEICoEIgQQBNgIkAxALCgAEIAWDWgcgGzsDyI6ULmbHIiNRlMdw4I94+P853L7/0rbFo9sKV4oXaRwvGIdKJpPp9HT9oFZo/7+be2+iiSUNp5E9QjVClERJZNGS+EMl4lXSoJ6gIbnLNrXPagr9sLXAFLNQqHqhUKgEVqhYnSJ1h1AIhbJLAFgKsKWqP3C8ZJ8khaSQ2Eu3F5gBzwMPNEJPaAhP8V7Cl4l/D1ACALz3tgW2BbEFgQWxBbEFgQW2xWkFCSjgBJRaQkICSjW4nYBSCSihBLRSJASUUAJaKRLSCoS0AiGtQEgrdH8AAwD7Bw==' }
+      // No external font resources needed - using system fonts only
     ];
     
     this.deferredResources = [];

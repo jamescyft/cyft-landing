@@ -1,0 +1,198 @@
+/**
+ * Components
+ * Essential UI components only
+ */
+
+/* Button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-base);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  min-height: 48px;
+  min-width: 120px;
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-gray-800);
+}
+
+.btn--secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-gray-300);
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-gray-100);
+}
+
+.btn--large {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-lg);
+}
+
+/* Form Elements */
+.form {
+  width: 100%;
+}
+
+.form__group {
+  margin-bottom: var(--space-6);
+}
+
+.form__label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form__input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.form__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form__input::placeholder {
+  color: var(--color-gray-500);
+}
+
+/* Card */
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+}
+
+.card--bordered {
+  box-shadow: none;
+  border: 1px solid var(--color-gray-200);
+}
+
+/* Hero Components */
+.hero__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e1e5eb 40%, #c3cbd6 100%);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: var(--space-8);
+  max-width: 800px;
+}
+
+.hero__brand {
+  font-size: var(--text-sm);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-8);
+}
+
+.hero__title {
+  margin-bottom: var(--space-6);
+}
+
+.hero__subtitle {
+  font-size: var(--text-xl);
+  color: var(--color-text-muted);
+  margin-bottom: 0;
+}
+
+/* Video Background */
+.hero__video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.hero__video.is-loaded {
+  opacity: 1;
+}
+
+/* Story Cards */
+.story-card {
+  background: var(--color-bg-alt);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-8);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.story-card__title {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-4);
+}
+
+.story-card--faded {
+  opacity: 0.8;
+}
+
+/* Demo Skeleton */
+.demo__skeleton {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--color-gray-300);
+}
+
+/* Skip Link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--space-2) var(--space-4);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+} 

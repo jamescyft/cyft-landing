@@ -84,8 +84,8 @@
   letter-spacing: var(--letter-spacing-widest);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  opacity: 0.7; /* Fixed! No more flash! */
-  animation: subtle-fade-enhance 2s ease-out 0.5s forwards;
+  opacity: 0.7;
+  transition: opacity 0.8s ease-out;
 }
 
 .hero__content {
@@ -104,8 +104,9 @@
   line-height: var(--line-height-tight);
   margin: 0;
   color: var(--color-black-pure);
-  opacity: 1; /* No flash! Start visible! */
-  animation: subtle-entrance 1.5s ease-out 0.2s both;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease-out;
 }
 
 .hero__subtitle {

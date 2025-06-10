@@ -21,12 +21,15 @@ export class SectionRevealer {
     if (this.isRevealing) return;
     this.isRevealing = true;
 
-    // Sections are now visible by default, just ensure smooth animations
+    // Sections start visible to prevent blank page flash
+    // Just enhance them with smooth transitions for future animations
     requestAnimationFrame(() => {
       this.sections.forEach((section, index) => {
-        // Ensure sections have proper transition for any future animations
+        // Ensure sections are definitely visible (defensive coding)
+        section.style.opacity = '1';
+        section.style.transform = 'none';
+        // Add smooth transitions for any future animations
         section.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
-        // They should already be visible (opacity: 1) from CSS
       });
     });
   }

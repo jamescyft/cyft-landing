@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyft – The End of Human APIs</title>
+    <title>Cyft - The End of Human APIs</title>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Cyft automates documentation for MSPs. Stop spending 90 minutes a day on manual data entry. Perfect documentation happens instantly while you work.">
@@ -13,14 +13,14 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://cyft.com/">
-    <meta property="og:title" content="Cyft – The End of Human APIs">
+    <meta property="og:title" content="Cyft - The End of Human APIs">
     <meta property="og:description" content="Stop being a human API. Cyft automates documentation for MSPs, saving 90 minutes per tech per day.">
     <meta property="og:image" content="https://cyft.com/og-image.jpg">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://cyft.com/">
-    <meta property="twitter:title" content="Cyft – The End of Human APIs">
+    <meta property="twitter:title" content="Cyft - The End of Human APIs">
     <meta property="twitter:description" content="Stop being a human API. Cyft automates documentation for MSPs, saving 90 minutes per tech per day.">
     <meta property="twitter:image" content="https://cyft.com/twitter-image.jpg">
     
@@ -36,30 +36,9 @@
     <link rel="dns-prefetch" href="https://cyft.com">
     <link rel="preconnect" href="https://cyft.com">
     
-    <!-- Critical Inline CSS - MUST be inline to prevent FOUC -->
-    <style>
-        /* Critical CSS - Prevents Flash of Unstyled Content */
-        html{font-size:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-        body{margin:0;font-family:system-ui,-apple-system,sans-serif;line-height:1.5;color:#1a1a1a;background:#fff;min-height:100vh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-        .section--hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:#fff}
-        .hero__branding{position:absolute;top:2.5rem;left:50%;transform:translateX(-50%);z-index:10}
-        .hero__brand-name{font-size:0.875rem;font-weight:300;letter-spacing:0.15em;color:#666;text-transform:uppercase;opacity:0.7;display:inline-block}
-        .hero__content{text-align:center;z-index:10;position:relative;padding:0 1.5rem;width:100%}
-        .hero__title{font-size:clamp(2.5rem,4vw + 1rem,4.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1;margin:0;color:#000;opacity:1}
-        .hero__subtitle{font-size:clamp(1.25rem,2vw,1.75rem);font-weight:400;line-height:1.5;margin-top:1.5rem;color:#666;opacity:0.9}
-        .video-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;opacity:0}
-        .animated-background{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#f5f7fa 0%,#e1e5eb 40%,#c3cbd6 100%);z-index:1;opacity:1}
-        .section:not(.section--hero){opacity:1}
-        .btn{display:inline-flex;align-items:center;padding:1rem 2rem;font-size:1.125rem;font-weight:600;text-decoration:none;border-radius:0.5rem;cursor:pointer;border:none;transition:transform 0.2s}
-        .btn--primary{background:#1a1a1a;color:#fff}
-        .demo__container{min-height:600px}
-        .form-success-sequence{opacity:0;visibility:hidden}
-        @media(prefers-reduced-motion:no-preference){.a-simple-fade-in{animation:simpleFadeIn 0.8s ease-out forwards}}
-        @keyframes simpleFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    </style>
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="/src/css/main.css">
+    <!-- Main CSS - Preload for performance -->
+    <link rel="preload" href="/src/css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/src/css/main.css"></noscript>
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -81,16 +60,11 @@
     <!-- Skip to content link for accessibility -->
     <a href="#main-content" class="skip-to-content">Skip to main content</a>
     
-    <!-- NoScript fallback -->
-    <noscript>
-        <div class="u-bg-warning u-p-6 u-align-center u-border-b">
-            <p>This website works best with JavaScript enabled. Some features may not be available.</p>
-        </div>
-    </noscript>
+
     
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="section section--hero has-video u-animate-fade-in" aria-label="Introduction">
+        <section class="section section--hero has-video" aria-label="Introduction">
             <!-- Animated Background (hidden when video is active) -->
             <div class="animated-background">
                 <div class="ripple-container">
@@ -324,6 +298,7 @@
                             required 
                             aria-required="true" 
                             placeholder="Name"
+                            autocomplete="name"
                         >
                         <span class="form__error" role="alert"></span>
                     </div>
@@ -337,6 +312,7 @@
                             required 
                             aria-required="true" 
                             placeholder="Email"
+                            autocomplete="email"
                         >
                         <span class="form__error" role="alert"></span>
                     </div>
@@ -350,6 +326,7 @@
                             required 
                             aria-required="true" 
                             placeholder="Company"
+                            autocomplete="organization"
                         >
                         <span class="form__error" role="alert"></span>
                     </div>
@@ -362,6 +339,7 @@
                             class="form__input" 
                             min="1" 
                             placeholder="Number of technicians (optional)"
+                            autocomplete="off"
                         >
                         <span class="form__error" role="alert"></span>
                     </div>
@@ -389,6 +367,7 @@
                                         class="form__input friend-email-input" 
                                         placeholder="Friend's email"
                                         aria-label="Friend's email address"
+                                        autocomplete="email"
                                     >
                                     <button type="submit" class="btn btn--secondary btn--compact">
                                         Invite

@@ -23,8 +23,20 @@
   --color-success-light: #E8F5E9;
   --color-success-dark: #2E7D32;
   --color-error: #F44336;
+  --color-error-light: #FFEBEE;
+  --color-error-dark: #C62828;
   --color-warning: #FF6B35;
+  --color-warning-light: #FFF3E0;
+  --color-warning-dark: #E65100;
   --color-info: #0052CC;
+  --color-info-light: #E3F2FD;
+  --color-info-dark: #0037A0;
+  
+  /* Color Palette - Interactive States */
+  --color-interactive-hover: rgba(0, 0, 0, 0.05);
+  --color-interactive-active: rgba(0, 0, 0, 0.08);
+  --color-interactive-focus: rgba(0, 0, 0, 0.1);
+  --color-interactive-disabled: #E0E0E0;
   
   /* Color Palette - Background */
   --color-bg-primary: #FAFAFA;
@@ -32,6 +44,14 @@
   --color-bg-tertiary: #F9F9F9;
   --color-bg-white: #FFF;
   --color-bg-hover: rgba(0, 0, 0, 0.02);
+  --color-bg-glass: rgba(255, 255, 255, 0.8);
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Color Palette - Borders */
+  --color-border-light: #E5E5E5;
+  --color-border-medium: #D1D1D1;
+  --color-border-dark: #A3A3A3;
+  --color-border-focus: var(--color-black-pure);
   
   /* Typography - Font Families */
   --font-system: -apple-system, blinkmacsystemfont, "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif;
@@ -42,8 +62,10 @@
   --font-weight-thin: 100;
   --font-weight-light: 300;
   --font-weight-regular: 400;
+  --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
   --font-weight-black: 900;
   
   /* Typography - Font Sizes (fluid) */
@@ -56,6 +78,7 @@
   --font-size-base: 1rem;
   --font-size-small: 0.9rem;
   --font-size-tiny: 0.8rem;
+  --font-size-micro: 0.7rem;
   
   /* Typography - Line Heights */
   --line-height-compressed: 0.9;
@@ -87,6 +110,8 @@
   --space-10: 5rem;   /* 80px */
   --space-11: 6rem;   /* 96px */
   --space-12: 8rem;   /* 128px */
+  --space-16: 12rem;  /* 192px */
+  --space-20: 16rem;  /* 256px */
   
   /* Section Spacing */
   --space-section: 10vh;
@@ -94,14 +119,22 @@
   --space-section-large: 20vh;
   --space-section-xlarge: 30vh;
   
+  /* Component Spacing */
+  --space-component-gap: var(--space-6);
+  --space-component-padding: var(--space-5);
+  --space-element-gap: var(--space-4);
+  
   /* Shadows */
   --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.03);
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 2px 20px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
   --shadow-xl: 0 10px 60px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 20px 80px rgba(0, 0, 0, 0.12);
   --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
   --shadow-success: 0 2px 10px rgba(76, 175, 80, 0.1);
+  --shadow-error: 0 2px 10px rgba(244, 67, 54, 0.1);
+  --shadow-focus: 0 0 0 3px rgba(0, 0, 0, 0.1);
   
   /* Borders */
   --border-width-thin: 1px;
@@ -111,11 +144,13 @@
   
   /* Border Radius */
   --radius-none: 0;
+  --radius-xs: 2px;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-2xl: 24px;
+  --radius-3xl: 32px;
   --radius-full: 9999px;
   --radius-circle: 50%;
   
@@ -133,10 +168,12 @@
   --z-maximum: 999;
   
   /* Transitions */
+  --transition-instant: 0.1s ease;
   --transition-fast: 0.15s ease;
   --transition-base: 0.3s ease;
   --transition-slow: 0.6s ease;
   --transition-slower: 0.8s ease;
+  --transition-slowest: 1.2s ease;
   
   /* Easing Functions */
   --ease-linear: linear;
@@ -146,6 +183,8 @@
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
   
   /* Animation Durations */
   --duration-instant: 0.1s;
@@ -181,6 +220,7 @@
   --delay-2400: 2400ms;
   
   /* Breakpoints (for reference in JS) */
+  --breakpoint-xs: 475px;
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
@@ -188,6 +228,7 @@
   --breakpoint-2xl: 1536px;
   
   /* Container Widths */
+  --container-xs: 475px;
   --container-sm: 640px;
   --container-md: 768px;
   --container-lg: 1024px;
@@ -198,25 +239,77 @@
   --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
   --focus-outline-color: var(--color-black-pure);
+  --focus-ring: 0 0 0 3px rgba(0, 0, 0, 0.1);
   
   /* Form Styles */
   --form-input-height: 3rem;
+  --form-input-height-sm: 2.5rem;
+  --form-input-height-lg: 3.5rem;
   --form-input-padding-x: var(--space-4);
   --form-input-padding-y: var(--space-3);
-  --form-input-border: var(--border-width-thin) solid var(--color-text-light);
+  --form-input-border: var(--border-width-thin) solid var(--color-border-light);
+  --form-input-border-hover: var(--border-width-thin) solid var(--color-border-medium);
   --form-input-border-focus: var(--border-width-thin) solid var(--color-black-pure);
   --form-input-border-valid: var(--border-width-thin) solid var(--color-success);
   --form-input-border-invalid: var(--border-width-thin) solid var(--color-error);
+  --form-input-bg: var(--color-bg-white);
+  --form-input-bg-focus: var(--color-bg-white);
+  --form-input-bg-disabled: var(--color-bg-secondary);
+  
+  /* Loading States */
+  --loading-skeleton-bg: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  --loading-pulse: 1.5s ease-in-out infinite alternate;
+  --loading-shimmer: 2s linear infinite;
   
   /* Accessibility */
   --min-touch-target: 44px;
   --focus-visible-outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  --reduced-motion-duration: 0.01ms;
+  
+  /* Interactive States */
+  --hover-lift: translateY(-2px);
+  --hover-scale: scale(1.02);
+  --active-scale: scale(0.98);
+  --focus-scale: scale(1.05);
+  
+  /* Glass Morphism */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(10px);
+  
+  /* Content Widths */
+  --content-width-narrow: 28rem;
+  --content-width-medium: 42rem;
+  --content-width-wide: 56rem;
+  --content-width-full: 100%;
 }
 
-/* Dark mode support (future enhancement) */
+/* Enhanced Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Define dark mode overrides here when needed */
+    --color-black-pure: #FFF;
+    --color-black-deep: #F5F5F5;
+    --color-white-soft: #0A0A0A;
+    --color-white-pure: #000;
+    
+    --color-text-primary: #FFF;
+    --color-text-secondary: #E0E0E0;
+    --color-text-muted: #A0A0A0;
+    --color-text-light: #666;
+    --color-text-whisper: #444;
+    
+    --color-bg-primary: #0A0A0A;
+    --color-bg-secondary: #1A1A1A;
+    --color-bg-tertiary: #222;
+    --color-bg-white: #111;
+    --color-bg-hover: rgba(255, 255, 255, 0.02);
+    --color-bg-glass: rgba(0, 0, 0, 0.8);
+    
+    --color-border-light: #333;
+    --color-border-medium: #444;
+    --color-border-dark: #555;
+    
+    --loading-skeleton-bg: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
   }
 }
 
@@ -227,21 +320,30 @@
     --color-warning: #CC5200;
     --focus-outline-width: 3px;
     --border-width-thin: 2px;
+    --shadow-focus: 0 0 0 4px rgba(0, 0, 0, 0.2);
   }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --transition-fast: 0.01ms;
-    --transition-base: 0.01ms;
-    --transition-slow: 0.01ms;
-    --transition-slower: 0.01ms;
-    --duration-instant: 0.01ms;
-    --duration-fast: 0.01ms;
-    --duration-normal: 0.01ms;
-    --duration-slow: 0.01ms;
-    --duration-slower: 0.01ms;
-    --duration-slowest: 0.01ms;
+    --transition-instant: var(--reduced-motion-duration);
+    --transition-fast: var(--reduced-motion-duration);
+    --transition-base: var(--reduced-motion-duration);
+    --transition-slow: var(--reduced-motion-duration);
+    --transition-slower: var(--reduced-motion-duration);
+    --transition-slowest: var(--reduced-motion-duration);
+    --duration-instant: var(--reduced-motion-duration);
+    --duration-fast: var(--reduced-motion-duration);
+    --duration-normal: var(--reduced-motion-duration);
+    --duration-slow: var(--reduced-motion-duration);
+    --duration-slower: var(--reduced-motion-duration);
+    --duration-slowest: var(--reduced-motion-duration);
+    --loading-pulse: none;
+    --loading-shimmer: none;
+    --hover-lift: translateY(0);
+    --hover-scale: scale(1);
+    --active-scale: scale(1);
+    --focus-scale: scale(1);
   }
 } 

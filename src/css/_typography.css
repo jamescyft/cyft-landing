@@ -1,0 +1,81 @@
+/**
+ * Typography
+ * Simple, scalable type system
+ */
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-black);
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-4);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-4);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-3);
+}
+
+h4 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-3);
+}
+
+/* Body Text */
+p {
+  margin-bottom: var(--space-4);
+  max-width: 65ch;
+}
+
+.lead {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.1em;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Strong */
+strong {
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+/* Code */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-gray-100);
+  padding: 0.125em 0.25em;
+  border-radius: var(--radius-sm);
+}
+
+/* Text Utilities */
+.text-center { text-align: center; }
+.text-muted { color: var(--color-text-muted); }
+.text-small { font-size: var(--text-sm); }
+.text-uppercase { 
+  text-transform: uppercase; 
+  letter-spacing: 0.05em;
+} 

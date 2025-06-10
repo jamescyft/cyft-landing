@@ -161,12 +161,19 @@ export class VideoLoader {
       heroSection.classList.add('video-loaded');
     }
     
-    // Fade in video smoothly
+    // Smooth cross-fade from animated background to video
     this.video.style.opacity = '0';
     this.video.play().then(() => {
-      this.video.style.transition = 'opacity 0.5s ease-in';
-      this.video.style.opacity = '1';
-      logger.info('Video playback started');
+      // Use a longer, smoother transition to prevent jarring changes
+      this.video.style.transition = 'opacity 1.2s ease-in-out';
+      this.container.style.transition = 'opacity 1.2s ease-in-out';
+      
+      // Gradual transition
+      requestAnimationFrame(() => {
+        this.video.style.opacity = '1';
+      });
+      
+      logger.info('Video playback started with smooth transition');
     }).catch(error => {
       logger.error('Video playback failed:', error);
       this.hideVideo();
