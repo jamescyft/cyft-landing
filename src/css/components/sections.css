@@ -63,15 +63,13 @@
   max-width: var(--container-xl);
 }
 
-/* Hero Section - Core styles moved to hero-optimized.css for layout stability */
+/* Hero Section - Typography only (layout and animations in hero-optimized.css) */
 .hero__brand-name {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-widest);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  opacity: 0.7;
-  transition: opacity 0.8s ease-out;
 }
 
 .hero__title {
@@ -79,9 +77,6 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-tight);
   color: var(--color-black-pure);
-  opacity: 1;
-  transform: translateY(0);
-  transition: all 0.6s ease-out;
 }
 
 .hero__subtitle {
@@ -174,7 +169,7 @@
 
 .reveal__sequence {
   margin-bottom: 12vh;
-  text-align: left;
+  text-align: center;
 }
 
 .reveal__whisper {
