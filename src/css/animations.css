@@ -367,25 +367,7 @@
 
 /* Specific Application Animations */
 
-/* Ripple Effect for Interactive Elements */
-@keyframes ripple {
-  from {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 1;
-  }
-  to {
-    transform: translate(-50%, -50%) scale(4);
-    opacity: 0;
-  }
-}
-
-.a-ripple {
-  position: absolute;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.6);
-  transform: scale(0);
-  animation: ripple var(--duration-slower) linear infinite;
-}
+/* Clean animations - ripple effects removed */
 
 /* Hero Section Animations */
 .a-hero-title {
@@ -685,7 +667,6 @@
     animation-iteration-count: 1 !important;
   }
   
-  .a-ripple,
   .a-spinner,
   .a-skeleton,
   .a-typewriter,
@@ -713,10 +694,6 @@
 
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
-  .a-ripple {
-    background: rgba(0, 0, 0, 0.8);
-  }
-  
   .a-skeleton {
     background: linear-gradient(90deg, #f0f0f0 25%, #000 50%, #f0f0f0 75%);
   }
@@ -736,10 +713,6 @@
 
 /* Dark Mode Adaptations */
 @media (prefers-color-scheme: dark) {
-  .a-ripple {
-    background: rgba(255, 255, 255, 0.3);
-  }
-  
   .a-skeleton {
     background: var(--loading-skeleton-bg);
   }

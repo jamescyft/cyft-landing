@@ -1,96 +1,64 @@
 /**
- * Hero Background - Stable Layout with Animated Ripples
- * Optimized for Core Web Vitals and layout stability
+ * Clean Hero Section
+ * Minimal design with smooth text animations only
  */
 
-/* Hero Section Layout Stability */
+/* Hero Section - Clean Layout */
 .section--hero {
-  /* Fixed height to prevent layout shifts */
+  /* Clean white background */
+  background: var(--color-white-pure);
+  
+  /* Stable dimensions to prevent layout shifts */
   min-height: 100vh;
   height: 100vh;
-  /* Ensure content is positioned properly */
+  
+  /* Center content */
   position: relative;
   display: flex;
   align-items: center;
   overflow: hidden;
 }
 
-/* Animated Background - Always Visible */
-.animated-background {
-  position: absolute;
-  inset: 0;
-  
-  /* Elegant gradient background */
-  background: linear-gradient(135deg, #f5f7fa 0%, #e1e5eb 40%, #c3cbd6 100%);
-  z-index: 1;
-  opacity: 1;
-  
-  /* Ensure it doesn't cause layout shifts */
-  transform: translateZ(0);
-  will-change: auto;
-}
-
-/* Ripple Container - Stable Positioning */
-.ripple-container {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-/* Ripple Animation - Optimized */
-.ripple {
-  position: absolute;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  pointer-events: none;
-  
-  /* Stable sizing to prevent shifts */
-  width: 120px;
-  height: 120px;
-  
-  /* Performance optimizations */
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Hero Content Layout Stability */
+/* Hero Branding - Clean Positioning */
 .hero__branding {
-  /* Fixed positioning to prevent shifts */
   position: absolute;
   top: 4rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   
-  /* Prevent layout shifts */
+  /* Stable dimensions */
   width: auto;
   height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  /* Smooth fade-in animation */
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
 }
 
+/* Hero Content - Clean Centered Layout */
 .hero__content {
-  /* Stable positioning */
   position: relative;
   z-index: 10;
   
-  /* Fixed dimensions to prevent shifts */
+  /* Clean centered positioning */
   width: 100%;
   max-width: 1024px;
-  margin-left: 8vw;
+  margin: 0 auto;
   padding: 0 2rem;
+  text-align: center;
   
-  /* Reserve space for title */
+  /* Reserve space to prevent shifts */
   min-height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
+/* Hero Title - Clean Animation */
 .hero__title {
   /* Stable font loading */
   font-display: swap;
@@ -100,29 +68,69 @@
   display: flex;
   align-items: center;
   
-  /* Stable line height */
+  /* Clean typography */
   line-height: 1.1;
   margin: 0;
+  
+  /* Smooth slide-up animation */
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideUpFade 1.0s ease-out 0.4s forwards;
 }
 
+/* Hero Subtitle - Clean Animation */
 .hero__subtitle {
   /* Reserve space for subtitle */
   min-height: 60px;
   display: flex;
   align-items: center;
   margin-top: 2rem;
+  
+  /* Smooth fade-in animation with delay */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUpFade 0.8s ease-out 0.8s forwards;
+}
+
+/* Clean Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Performance & Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .animated-background,
-  .ripple {
+  .hero__branding,
+  .hero__title,
+  .hero__subtitle {
     animation: none !important;
+    opacity: 1 !important;
     transform: none !important;
+  }
+  
+  .hero__branding {
+    transform: translateX(-50%) !important;
   }
 }
 
-/* Mobile Layout Stability */
+/* Mobile Layout */
 @media (max-width: 768px) {
   .section--hero {
     height: 100vh;
@@ -130,7 +138,7 @@
   }
   
   .hero__content {
-    margin-left: 4vw;
+    padding: 0 1rem;
     min-height: 250px;
   }
   

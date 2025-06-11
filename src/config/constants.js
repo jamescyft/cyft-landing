@@ -13,8 +13,6 @@ export const APP_CONFIG = {
 };
 
 export const ANIMATION_TIMING = {
-  rippleExpand: 20000, // 20s
-  rippleDelays: [0, 5000, 10000, 15000], // 0s, 5s, 10s, 15s
   fadeIn: 800, // 0.8s
   whisperIn: 2000, // 2s
   wordReveal: 1200, // 1.2s
@@ -208,14 +206,12 @@ export const DEMO_CONFIG = {
     betweenSections: 200,
     betweenItems: 100,
     syncIndicators: 200,
-    rippleAnimation: 600,
     formSubmitMock: 1500
   },
   maxVisibleTickets: 450 // Visual representation, not actual count
 };
 
 export const TIMEOUTS = {
-  rippleAnimation: 600,
   formSubmitMock: 1500,
   highlightRemoval: 1500,
   documentationComplete: 500,
