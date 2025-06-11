@@ -63,21 +63,7 @@
   max-width: var(--container-xl);
 }
 
-/* Opening/Hero Section */
-.section--hero {
-  background: var(--color-white-pure);
-  overflow: hidden;
-}
-
-/* Hero Branding */
-.hero__branding {
-  position: absolute;
-  top: var(--space-9);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: var(--z-above);
-}
-
+/* Hero Section - Core styles moved to hero-optimized.css for layout stability */
 .hero__brand-name {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-light);
@@ -88,21 +74,10 @@
   transition: opacity 0.8s ease-out;
 }
 
-.hero__content {
-  text-align: left;
-  z-index: var(--z-above);
-  position: relative;
-  padding: 0 var(--space-6);
-  max-width: var(--container-lg);
-  margin-left: 8vw;
-}
-
 .hero__title {
   font-size: var(--font-size-hero);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-tight);
-  line-height: var(--line-height-tight);
-  margin: 0;
   color: var(--color-black-pure);
   opacity: 1;
   transform: translateY(0);
@@ -113,7 +88,6 @@
   font-size: var(--font-size-lead);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-base);
-  margin-top: var(--space-5);
   color: var(--color-text-muted);
   letter-spacing: var(--letter-spacing-normal);
   white-space: nowrap;
@@ -296,20 +270,12 @@
     padding: var(--space-section-mobile) 6vw;
   }
   
-  .hero__branding {
-    top: var(--space-6);
-  }
-  
   .hero__brand-name {
     font-size: var(--font-size-xs);
   }
   
   .hero__title {
     font-size: var(--font-size-hero-mobile);
-  }
-  
-  .hero__content {
-    margin-left: 4vw;
   }
   
   .hero__subtitle {

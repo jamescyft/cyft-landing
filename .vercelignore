@@ -1,0 +1,12 @@
+preview.log
+# experimental html
+production-debug.html
+test-*.html
+vercel-production.json
+vercel-permissive.json
+docs/
+tests/
+CHROME_EXTENSION_FIX_DEPLOYMENT.md
+EMERGENCY_VIDEO_SOLUTION.md
+VIDEO_DEPLOYMENT_GUIDE.md
+PERFORMANCE_OPTIMIZATIONS.md 

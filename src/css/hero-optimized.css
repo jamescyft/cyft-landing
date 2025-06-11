@@ -1,43 +1,148 @@
 /**
- * Optimized Hero Background
- * Fallback CSS animation when video is loading/unavailable
+ * Hero Background - Stable Layout with Animated Ripples
+ * Optimized for Core Web Vitals and layout stability
  */
 
-/* Keep animated background visible by default */
+/* Hero Section Layout Stability */
+.section--hero {
+  /* Fixed height to prevent layout shifts */
+  min-height: 100vh;
+  height: 100vh;
+  /* Ensure content is positioned properly */
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Animated Background - Always Visible */
 .animated-background {
   position: absolute;
   inset: 0;
-
-  /* Subtle water-like gradient that matches video theme */
+  
+  /* Elegant gradient background */
   background: linear-gradient(135deg, #f5f7fa 0%, #e1e5eb 40%, #c3cbd6 100%);
   z-index: 1;
   opacity: 1;
-  transition: opacity 0.5s ease-out;
+  
+  /* Ensure it doesn't cause layout shifts */
+  transform: translateZ(0);
+  will-change: auto;
 }
 
-/* Hide animated background when video is loaded */
-.section--hero.has-video .animated-background {
-  opacity: 1;
+/* Ripple Container - Stable Positioning */
+.ripple-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Ripple Animation - Optimized */
+.ripple {
+  position: absolute;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
   pointer-events: none;
+  
+  /* Stable sizing to prevent shifts */
+  width: 120px;
+  height: 120px;
+  
+  /* Performance optimizations */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-.section--hero.has-video.video-loaded .animated-background {
-  opacity: 0;
+/* Hero Content Layout Stability */
+.hero__branding {
+  /* Fixed positioning to prevent shifts */
+  position: absolute;
+  top: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  
+  /* Prevent layout shifts */
+  width: auto;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Performance optimizations */
+.hero__content {
+  /* Stable positioning */
+  position: relative;
+  z-index: 10;
+  
+  /* Fixed dimensions to prevent shifts */
+  width: 100%;
+  max-width: 1024px;
+  margin-left: 8vw;
+  padding: 0 2rem;
+  
+  /* Reserve space for title */
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero__title {
+  /* Stable font loading */
+  font-display: swap;
+  
+  /* Reserve space to prevent shifts */
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  
+  /* Stable line height */
+  line-height: 1.1;
+  margin: 0;
+}
+
+.hero__subtitle {
+  /* Reserve space for subtitle */
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+/* Performance & Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .animated-background {
-    animation: none;
+  .animated-background,
+  .ripple {
+    animation: none !important;
+    transform: none !important;
   }
 }
 
-/* Video background shows when loaded */
-.video-background {
-  opacity: 0;
-  transition: opacity 0.5s ease-in;
-}
-
-.video-background.is-loaded {
-  opacity: 1;
+/* Mobile Layout Stability */
+@media (max-width: 768px) {
+  .section--hero {
+    height: 100vh;
+    min-height: 100vh;
+  }
+  
+  .hero__content {
+    margin-left: 4vw;
+    min-height: 250px;
+  }
+  
+  .hero__title {
+    min-height: 150px;
+  }
+  
+  .hero__subtitle {
+    min-height: 80px;
+  }
+  
+  .hero__branding {
+    top: 2rem;
+  }
 } 
