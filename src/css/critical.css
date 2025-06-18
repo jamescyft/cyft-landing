@@ -71,7 +71,7 @@ body {
 
 .hero__subtitle {
   font-size: clamp(1.25rem, 2vw, 1.75rem);
-  opacity: 0.9;
+  opacity: 1;
   margin-bottom: 2rem;
 }
 
@@ -115,8 +115,9 @@ body {
 }
 
 /* Hide non-critical elements initially */
+/* Removed opacity: 0 to prevent rendering issues
 .section:not(.section--hero),
 .demo-container,
 .fade-in {
   opacity: 0;
-} 
+} */ 

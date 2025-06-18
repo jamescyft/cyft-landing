@@ -278,6 +278,31 @@ The landing page supports automatic lead capture to Google Sheets via Google App
 
 For detailed setup instructions, see `google-sheets-setup.md`.
 
+## 🐛 Chrome Rendering Fixes (December 2024)
+
+### Issue Fixed
+HTML text was showing incorrectly during rendering on Chromium-based browsers.
+
+### Changes Made
+1. **Hero elements now start visible** - Removed `opacity: 0` from critical elements
+2. **Chrome-specific rendering optimizations** - Added transform3d and backface-visibility fixes
+3. **Progressive enhancement** - Content visible by default, animations enhance
+
+### Testing
+1. Open `test-chrome-rendering.html` in Chrome/Edge
+2. Run all tests - they should pass
+3. Check main site with Chrome DevTools:
+   - Network throttled to "Slow 3G"
+   - Clear cache and hard reload
+   - No HTML text should flash
+
+### Files Modified
+- `index.html` - Updated inline critical CSS
+- `src/css/critical-inline.css` - Made hero elements visible
+- `src/css/hero-optimized.css` - Added Chrome rendering fixes
+
+See `CHROMIUM_RENDERING_FIX_2024.md` for full details.
+
 ## 📝 License
 
 Proprietary - Cyft 2025

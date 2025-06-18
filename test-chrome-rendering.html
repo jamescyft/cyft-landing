@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome Rendering Test - Cyft</title>
+    
+    <style>
+        /* Test styles to verify rendering */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .test-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .test-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .test-status.pass {
+            background: #10b981;
+            color: white;
+        }
+        
+        .test-status.fail {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .test-status.warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        /* Chrome-specific test elements */
+        .chrome-test-text {
+            font-size: 2rem;
+            font-weight: bold;
+            opacity: 1;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .test-item {
+            padding: 1rem;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+        
+        .test-item h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        .test-item p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chrome Rendering Test Page</h1>
+    <p>This page tests the Chrome-specific rendering fixes applied to prevent HTML text from showing incorrectly.</p>
+    
+    <!-- Browser Detection -->
+    <div class="test-section">
+        <h2 class="test-title">Browser Detection</h2>
+        <div id="browser-info"></div>
+    </div>
+    
+    <!-- Rendering Tests -->
+    <div class="test-section">
+        <h2 class="test-title">Rendering Tests</h2>
+        <div class="test-grid">
+            <div class="test-item">
+                <h3>Text Visibility</h3>
+                <p id="text-visibility-test">Testing...</p>
+            </div>
+            <div class="test-item">
+                <h3>CSS Loading</h3>
+                <p id="css-loading-test">Testing...</p>
+            </div>
+            <div class="test-item">
+                <h3>Font Rendering</h3>
+                <p id="font-rendering-test">Testing...</p>
+            </div>
+            <div class="test-item">
+                <h3>Paint Timing</h3>
+                <p id="paint-timing-test">Testing...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hero Section Simulation -->
+    <div class="test-section">
+        <h2 class="test-title">Hero Section Rendering</h2>
+        <div style="background: #fff; padding: 4rem; text-align: center;">
+            <div class="chrome-test-text">Death to Manual Documentation</div>
+            <p style="margin-top: 1rem; color: #666;">If you can read this immediately without any flash, the fix is working!</p>
+        </div>
+    </div>
+    
+    <!-- Performance Metrics -->
+    <div class="test-section">
+        <h2 class="test-title">Performance Metrics</h2>
+        <div id="performance-metrics">
+            <div class="loading"></div> Collecting metrics...
+        </div>
+    </div>
+    
+    <!-- Test Results -->
+    <div class="test-section">
+        <h2 class="test-title">Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+    
+    <script>
+        // Browser detection
+        function detectBrowser() {
+            const ua = navigator.userAgent;
+            const browserInfo = document.getElementById('browser-info');
+            
+            let browser = 'Unknown';
+            let engine = 'Unknown';
+            
+            if (ua.includes('Chrome') && !ua.includes('Edg')) {
+                browser = 'Google Chrome';
+                engine = 'Chromium';
+            } else if (ua.includes('Edg')) {
+                browser = 'Microsoft Edge';
+                engine = 'Chromium';
+            } else if (ua.includes('Firefox')) {
+                browser = 'Mozilla Firefox';
+                engine = 'Gecko';
+            } else if (ua.includes('Safari') && !ua.includes('Chrome')) {
+                browser = 'Safari';
+                engine = 'WebKit';
+            }
+            
+            const version = ua.match(/Chrome\/(\d+)/) || ua.match(/Edg\/(\d+)/) || ['', 'Unknown'];
+            
+            browserInfo.innerHTML = `
+                <p><strong>Browser:</strong> ${browser}</p>
+                <p><strong>Engine:</strong> ${engine}</p>
+                <p><strong>Version:</strong> ${version[1]}</p>
+                <p><strong>User Agent:</strong> <code style="font-size: 0.75rem;">${ua}</code></p>
+                ${engine === 'Chromium' ? '<span class="test-status pass">Chromium Detected</span>' : '<span class="test-status warning">Non-Chromium Browser</span>'}
+            `;
+        }
+        
+        // Run tests
+        async function runTests() {
+            const tests = {
+                'text-visibility': testTextVisibility,
+                'css-loading': testCSSLoading,
+                'font-rendering': testFontRendering,
+                'paint-timing': testPaintTiming
+            };
+            
+            const results = [];
+            
+            for (const [testId, testFn] of Object.entries(tests)) {
+                try {
+                    const result = await testFn();
+                    document.getElementById(`${testId}-test`).innerHTML = 
+                        `<span class="test-status ${result.status}">${result.message}</span>`;
+                    results.push({ test: testId, ...result });
+                } catch (error) {
+                    document.getElementById(`${testId}-test`).innerHTML = 
+                        `<span class="test-status fail">Error: ${error.message}</span>`;
+                    results.push({ test: testId, status: 'fail', message: error.message });
+                }
+            }
+            
+            // Update test results
+            updateTestResults(results);
+        }
+        
+        // Test functions
+        async function testTextVisibility() {
+            // Check if text is immediately visible
+            const testElement = document.querySelector('.chrome-test-text');
+            const computedStyle = window.getComputedStyle(testElement);
+            const opacity = parseFloat(computedStyle.opacity);
+            
+            if (opacity === 1) {
+                return { status: 'pass', message: 'Text visible immediately' };
+            } else {
+                return { status: 'fail', message: `Opacity: ${opacity}` };
+            }
+        }
+        
+        async function testCSSLoading() {
+            // Check if critical CSS is applied
+            const bodyStyle = window.getComputedStyle(document.body);
+            const fontFamily = bodyStyle.fontFamily;
+            
+            if (fontFamily.includes('apple-system') || fontFamily.includes('BlinkMacSystemFont')) {
+                return { status: 'pass', message: 'Critical CSS loaded' };
+            } else {
+                return { status: 'warning', message: 'Using fallback fonts' };
+            }
+        }
+        
+        async function testFontRendering() {
+            // Check font smoothing
+            const testElement = document.querySelector('.chrome-test-text');
+            const computedStyle = window.getComputedStyle(testElement);
+            const fontSmoothing = computedStyle.webkitFontSmoothing;
+            
+            if (fontSmoothing === 'subpixel-antialiased' || fontSmoothing === 'antialiased') {
+                return { status: 'pass', message: `Font smoothing: ${fontSmoothing}` };
+            } else {
+                return { status: 'warning', message: 'Default font smoothing' };
+            }
+        }
+        
+        async function testPaintTiming() {
+            // Check paint timing
+            if ('PerformanceObserver' in window) {
+                return new Promise((resolve) => {
+                    const observer = new PerformanceObserver((list) => {
+                        const entries = list.getEntries();
+                        const fcp = entries.find(e => e.name === 'first-contentful-paint');
+                        if (fcp) {
+                            observer.disconnect();
+                            const time = Math.round(fcp.startTime);
+                            resolve({
+                                status: time < 1000 ? 'pass' : 'warning',
+                                message: `FCP: ${time}ms`
+                            });
+                        }
+                    });
+                    observer.observe({ entryTypes: ['paint'] });
+                    
+                    // Timeout after 2 seconds
+                    setTimeout(() => {
+                        observer.disconnect();
+                        resolve({ status: 'warning', message: 'No paint timing data' });
+                    }, 2000);
+                });
+            } else {
+                return { status: 'warning', message: 'Performance Observer not supported' };
+            }
+        }
+        
+        // Collect performance metrics
+        async function collectPerformanceMetrics() {
+            const metricsDiv = document.getElementById('performance-metrics');
+            
+            if ('performance' in window && 'getEntriesByType' in performance) {
+                const navigationTiming = performance.getEntriesByType('navigation')[0];
+                const paintTiming = performance.getEntriesByType('paint');
+                
+                let html = '<div class="test-grid">';
+                
+                // DOM timing
+                if (navigationTiming) {
+                    html += `
+                        <div class="test-item">
+                            <h3>DOM Content Loaded</h3>
+                            <p>${Math.round(navigationTiming.domContentLoadedEventEnd - navigationTiming.domContentLoadedEventStart)}ms</p>
+                        </div>
+                        <div class="test-item">
+                            <h3>Page Load Time</h3>
+                            <p>${Math.round(navigationTiming.loadEventEnd - navigationTiming.fetchStart)}ms</p>
+                        </div>
+                    `;
+                }
+                
+                // Paint timing
+                paintTiming.forEach(entry => {
+                    html += `
+                        <div class="test-item">
+                            <h3>${entry.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</h3>
+                            <p>${Math.round(entry.startTime)}ms</p>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                metricsDiv.innerHTML = html;
+            } else {
+                metricsDiv.innerHTML = '<p>Performance timing not available</p>';
+            }
+        }
+        
+        // Update test results
+        function updateTestResults(results) {
+            const resultsDiv = document.getElementById('test-results');
+            const passed = results.filter(r => r.status === 'pass').length;
+            const total = results.length;
+            
+            let statusClass = 'pass';
+            if (passed < total) statusClass = 'warning';
+            if (passed < total / 2) statusClass = 'fail';
+            
+            resultsDiv.innerHTML = `
+                <p><strong>Summary:</strong> ${passed}/${total} tests passed</p>
+                <span class="test-status ${statusClass}">${statusClass.toUpperCase()}</span>
+                ${results.some(r => r.status === 'fail') ? '<p style="margin-top: 1rem; color: #ef4444;">⚠️ Some tests failed. Please check the Chrome rendering fixes.</p>' : ''}
+                ${results.every(r => r.status === 'pass') ? '<p style="margin-top: 1rem; color: #10b981;">✅ All tests passed! Chrome rendering should work correctly.</p>' : ''}
+            `;
+        }
+        
+        // Initialize
+        detectBrowser();
+        runTests();
+        setTimeout(collectPerformanceMetrics, 1000);
+    </script>
+</body>
+</html> 

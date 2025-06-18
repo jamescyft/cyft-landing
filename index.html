@@ -36,9 +36,164 @@
     <link rel="dns-prefetch" href="https://cyft.com">
     <link rel="preconnect" href="https://cyft.com">
     
-    <!-- Main CSS - Preload for performance -->
-    <link rel="preload" href="/src/css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/src/css/main.css"></noscript>
+    <!-- Critical CSS inlined to prevent FOUC on slow connections -->
+    <style>
+/**
+ * Critical Inline CSS - Prevents FOUC on slow connections
+ */
+
+/* Prevent layout shift */
+html {
+  font-size: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Base body to prevent flash */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #fff;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hero section critical styles */
+.section--hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Subtle top gradient overlay for mysterious feel */
+.section--hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 30%,
+    rgba(0, 0, 0, 0.1) 60%,
+    transparent 100%
+  );
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Hero elements - start hidden to prevent FOUC */
+.hero__branding {
+  position: absolute;
+  top: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  /* Start visible to prevent HTML flash */
+  opacity: 1;
+  width: auto;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Brand name styling - White for contrast */
+.hero__brand-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Hero content critical */
+.hero__content {
+  text-align: center;
+  z-index: 10;
+  position: relative;
+  padding: 0 1.5rem;
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  /* Chrome rendering optimizations */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.hero__title {
+  font-size: clamp(2.5rem, 4vw + 1rem, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+  color: #000;
+  /* Start visible to prevent HTML flash */
+  opacity: 1;
+  /* Chrome text rendering optimization */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.hero__subtitle {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 1.5rem;
+  color: #666;
+  /* Start visible to prevent HTML flash */
+  opacity: 1;
+  /* Chrome text rendering optimization */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+/* Critical button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s;
+  min-height: 48px;
+  min-width: 120px;
+}
+
+.btn--primary {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .hero__content {
+    padding: 0 1rem;
+  }
+  
+  .hero__branding {
+    top: 2rem;
+  }
+}
+    </style>
+    
+    <!-- Main CSS - Load after critical styles -->
+    <link rel="stylesheet" href="/src/css/main.css">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
