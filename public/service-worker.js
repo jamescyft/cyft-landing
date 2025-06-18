@@ -3,7 +3,7 @@
  * Ultra-resilient caching with intelligent retry and prefetching
  */
 
-const VERSION = 'cyft-v3-chrome-fix';
+const VERSION = 'cyft-v4-no-css-cache';
 const CACHE_NAMES = {
   static: `${VERSION}-static`,
   dynamic: `${VERSION}-dynamic`,
@@ -14,7 +14,7 @@ const CACHE_NAMES = {
 const CACHE_CONFIG = {
   static: {
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    patterns: [/\.(js|css|woff2?|ttf|otf)$/i]
+    patterns: [/\.(js|woff2?|ttf|otf)$/i]
   },
   media: {
     maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
@@ -92,6 +92,11 @@ class ServiceWorkerController {
     
     // Navigation requests: Network first with offline fallback
     if (isNavigation) {
+      return this.networkFirstStrategy(request, CACHE_NAMES.dynamic);
+    }
+    
+    // CSS files: Always network first to ensure fresh styles
+    if (url.pathname.endsWith('.css')) {
       return this.networkFirstStrategy(request, CACHE_NAMES.dynamic);
     }
     
@@ -234,11 +239,9 @@ class ServiceWorkerController {
       const response = await fetch('/');
       const html = await response.text();
       
-      // Extract CSS and JS files
-      const cssMatches = html.matchAll(/href="([^"]+\.css)"/g);
+      // Extract JS files only (CSS removed to prevent caching issues)
       const jsMatches = html.matchAll(/src="([^"]+\.js)"/g);
       
-      for (const match of cssMatches) assets.push(match[1]);
       for (const match of jsMatches) assets.push(match[1]);
     } catch (error) {
       console.error('[SW] Failed to detect critical assets:', error);

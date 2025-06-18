@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { copyFileSync } from 'fs';
 
 export default defineConfig({
   root: './',
@@ -74,5 +75,22 @@ export default defineConfig({
   
   optimizeDeps: {
     exclude: ['src/js/main.js']
-  }
+  },
+  
+  plugins: [
+    {
+      name: 'copy-service-worker',
+      writeBundle() {
+        try {
+          copyFileSync(
+            resolve(__dirname, 'public/service-worker.js'),
+            resolve(__dirname, 'dist/service-worker.js')
+          );
+          console.log('Service worker copied to dist');
+        } catch (err) {
+          console.error('Failed to copy service worker:', err);
+        }
+      }
+    }
+  ]
 }); 
