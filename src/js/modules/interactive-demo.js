@@ -125,6 +125,36 @@ export class InteractiveDemo {
     this.init();
   }
   
+  /**
+   * Enable debug mode to track container heights
+   */
+  enableDebugMode() {
+    this.container.setAttribute('data-debug', 'true');
+    this.updateDebugInfo('idle');
+    
+    // Monitor height changes
+    this.heightObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        const height = Math.round(entry.contentRect.height);
+        this.container.setAttribute('data-height', `${height}px`);
+        console.log(`[InteractiveDemo] Height changed: ${height}px, State: ${this.container.getAttribute('data-state')}`);
+      }
+    });
+    
+    this.heightObserver.observe(this.container);
+  }
+  
+  /**
+   * Update debug state information
+   */
+  updateDebugInfo(state) {
+    if (this.container.hasAttribute('data-debug')) {
+      this.container.setAttribute('data-state', state);
+      const height = this.container.offsetHeight;
+      this.container.setAttribute('data-height', `${height}px`);
+    }
+  }
+  
   init() {
     if (this.elements.micButton) {
       this.elements.micButton.addEventListener('click', () => this.start());
@@ -143,17 +173,31 @@ export class InteractiveDemo {
   start() {
     if (this.state.isRunning) return;
     
-    this.state.isRunning = true;
-    const scenario = DEMO_SCENARIOS[this.state.currentScenarioIndex];
-    
-    // First, expand the container smoothly
-    this.container.classList.remove('is-compact');
-    
-    // Add a subtle pulse to the mic button
-    this.elements.micButton.classList.add('is-active');
-    
-    // Use a more reliable timing approach for animation sequencing
-    this.animateStart(scenario);
+    try {
+      this.state.isRunning = true;
+      const scenario = DEMO_SCENARIOS[this.state.currentScenarioIndex];
+      
+      // Update debug info
+      this.updateDebugInfo('starting');
+      
+      // First, expand the container smoothly
+      this.container.classList.remove('is-compact');
+      this.container.classList.remove('demo__container--collapsed');
+      
+      // Add a subtle pulse to the mic button
+      if (this.elements.micButton) {
+        this.elements.micButton.classList.add('is-active');
+      }
+      
+      // Update debug info
+      this.updateDebugInfo('playing');
+      
+      // Use a more reliable timing approach for animation sequencing
+      this.animateStart(scenario);
+    } catch (error) {
+      console.error('[InteractiveDemo] Error in start():', error);
+      this.state.isRunning = false;
+    }
   }
   
   /**
@@ -211,11 +255,6 @@ export class InteractiveDemo {
     
     // Phase 4: Complete ticket closure
     await this.showCompleteTicketClosure(scenario);
-    
-    // Show reset option
-    setTimeout(() => {
-      this.elements.resetSection.classList.add('is-visible');
-    }, 1000);
     
     this.state.isRunning = false;
   }
@@ -842,184 +881,236 @@ export class InteractiveDemo {
    * Show clean transition to scenarios button after user closes ticket overlay
    */
   showCleanScenariosTransition() {
-    // Preserve current scroll position and prevent scroll jumping
-    const currentScrollY = window.scrollY;
-    const demoContainer = this.container;
-    
-    // Lock scroll temporarily to prevent jump
-    document.body.style.overflow = 'hidden';
-    
-    // Fade out all the demo content smoothly
-    const elementsToHide = [
-      this.elements.splitView,
-      this.elements.docOutput
-    ];
-    
-    elementsToHide.forEach(element => {
-      if (element) {
-        element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(-20px)';
-      }
-    });
-    
-    // After the fade out completes, hide elements and show the scenarios button
-    setTimeout(() => {
+    try {
+      // Update debug info
+      this.updateDebugInfo('transitioning-to-scenarios');
+      
+      // Fade out all content smoothly
+      const elementsToHide = [
+        this.elements.voiceSection,
+        this.elements.splitView,
+        this.elements.docOutput,
+        this.elements.resetSection
+      ];
+      
       elementsToHide.forEach(element => {
         if (element) {
-          element.style.display = 'none';
+          element.style.transition = 'opacity 0.6s ease-out';
+          element.style.opacity = '0';
         }
       });
       
-      // Create a beautiful scenarios prompt with fixed height to prevent layout shift
-      const scenariosPrompt = document.createElement('div');
-      scenariosPrompt.className = 'scenarios-prompt';
-      scenariosPrompt.innerHTML = `
-        <div class="scenarios-prompt__content">
-          <h3 class="scenarios-prompt__title">Perfect documentation, every time.</h3>
-          <p class="scenarios-prompt__subtitle">See how Cyft handles different scenarios</p>
-          <button class="btn btn--primary btn--large scenarios-btn">
-            See More Scenarios
-          </button>
-        </div>
-      `;
-      
-      // Insert the prompt where the demo content was
-      this.container.appendChild(scenariosPrompt);
-      
-             // Restore scroll behavior after a brief delay
-       setTimeout(() => {
-         document.body.style.overflow = '';
-         
-         // Center the scenarios prompt in the viewport
-         const newContainerRect = demoContainer.getBoundingClientRect();
-         const viewportHeight = window.innerHeight;
-         const containerHeight = newContainerRect.height;
-         
-         // Calculate ideal scroll position to center the container
-         const idealCenterY = (viewportHeight - containerHeight) / 2;
-         const targetScrollY = currentScrollY + newContainerRect.top - idealCenterY;
-         
-         // Smooth scroll to center the prompt
-         window.scrollTo({
-           top: Math.max(0, targetScrollY),
-           behavior: 'smooth'
-         });
-       }, 100);
-      
-      // Animate in the prompt
-      requestAnimationFrame(() => {
-        scenariosPrompt.style.opacity = '0';
-        scenariosPrompt.style.transform = 'translateY(20px)';
-        scenariosPrompt.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
-        
-        requestAnimationFrame(() => {
-          scenariosPrompt.style.opacity = '1';
-          scenariosPrompt.style.transform = 'translateY(0)';
-        });
-      });
-      
-      // Add click handler for the new scenarios button
-      const scenariosBtn = scenariosPrompt.querySelector('.scenarios-btn');
-      if (scenariosBtn) {
-        scenariosBtn.addEventListener('click', () => {
-          // Preserve scroll position during reset
-          const resetScrollY = window.scrollY;
+      // After fade out, show scenarios prompt
+      setTimeout(() => {
+        try {
+          // Hide all elements
+          elementsToHide.forEach(element => {
+            if (element) {
+              element.style.display = 'none';
+            }
+          });
           
-          // Remove the prompt and immediately start next scenario
-          scenariosPrompt.style.transition = 'opacity 0.4s ease-out';
-          scenariosPrompt.style.opacity = '0';
+          // Clear container content first
+          this.container.innerHTML = '';
           
-          setTimeout(() => {
-            scenariosPrompt.remove();
-            
-            // Restore scroll position before reset
-            window.scrollTo(0, resetScrollY);
-            this.resetAndStartImmediately();
-          }, 400);
-        });
-      }
-    }, 600);
+          // Create scenarios prompt
+          const scenariosPrompt = document.createElement('div');
+          scenariosPrompt.className = 'scenarios-prompt';
+          scenariosPrompt.innerHTML = `
+            <div class="scenarios-prompt__content">
+              <h3 class="scenarios-prompt__title">Perfect documentation, every time.</h3>
+              <p class="scenarios-prompt__subtitle">See how Cyft handles different scenarios</p>
+              <button class="btn btn--primary btn--large scenarios-btn">
+                See More Scenarios
+              </button>
+            </div>
+          `;
+          
+          // Add prompt to container
+          this.container.appendChild(scenariosPrompt);
+          
+          // Apply collapsed state AFTER content is set
+          this.container.classList.add('demo__container--collapsed');
+          this.container.classList.remove('is-compact');
+          
+          // Update debug info
+          this.updateDebugInfo('scenarios-prompt');
+          
+          // Fade in prompt
+          requestAnimationFrame(() => {
+            scenariosPrompt.style.opacity = '1';
+          });
+          
+          // Handle button click
+          const scenariosBtn = scenariosPrompt.querySelector('.scenarios-btn');
+          if (scenariosBtn) {
+            scenariosBtn.addEventListener('click', () => {
+              this.startNextScenario();
+            });
+          }
+        } catch (error) {
+          console.error('[InteractiveDemo] Error in scenarios transition:', error);
+        }
+      }, 600);
+    } catch (error) {
+      console.error('[InteractiveDemo] Error in showCleanScenariosTransition:', error);
+    }
   }
   
-  resetAndStartImmediately() {
-    // Next scenario
+  /**
+   * Rebuild the original demo HTML structure after scenarios prompt
+   */
+  rebuildDemoStructure() {
+    // Restore the original demo container content
+    this.container.innerHTML = `
+      <!-- Voice Input -->
+      <div id="voice-input-section" class="demo__voice-section">
+        <button id="mic-button" class="btn btn--circle btn--primary" aria-label="Start demo">
+          <svg class="btn__icon" viewBox="0 0 24 24">
+            <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+          </svg>
+        </button>
+        <p class="demo__voice-hint">Click to see the transformation</p>
+      </div>
+
+      <!-- Split View -->
+      <div id="split-view-section" class="demo__split-view">
+        <div class="demo__split-grid">
+          <!-- Left: The Struggle -->
+          <div class="demo__struggle-column">
+            <h3 class="demo__column-title">The Old Way</h3>
+            
+            <!-- Typing Area -->
+            <div class="demo__typing-area">
+              <div class="demo__typing-header">
+                <span class="demo__typing-label">MANUAL ENTRY</span>
+              </div>
+              <div id="typical-notes" class="demo__typing-content">
+                <span class="demo__cursor">|</span>
+              </div>
+            </div>
+            
+            <!-- Natural Speech -->
+            <div class="demo__speech-area">
+              <div class="demo__speech-header">
+                <span class="demo__speech-label">NATURAL SPEECH</span>
+                <div class="demo__voice-indicator">
+                  <span class="voice-bar"></span>
+                  <span class="voice-bar"></span>
+                  <span class="voice-bar"></span>
+                  <span class="voice-bar"></span>
+                </div>
+              </div>
+              <div id="transcript-text" class="demo__speech-content"></div>
+            </div>
+          </div>
+
+          <!-- Right: The Understanding -->
+          <div class="demo__understanding-column">
+            <h3 class="demo__column-title">The Cyft Way</h3>
+            
+            <!-- Processing Area -->
+            <div class="demo__processing-area">
+              <div id="processing-indicator" class="demo__processing">
+                <span class="demo__processing-text">Listening...</span>
+              </div>
+              
+              <!-- Thought Bubbles Container -->
+              <div id="thoughts-container" class="demo__thoughts"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Documentation Output - Full Width -->
+      <div id="doc-output" class="demo__doc-output">
+        <div class="demo__doc-header">
+          <span class="demo__doc-system">CONNECTWISE TICKET</span>
+          <span class="demo__doc-status">READY</span>
+        </div>
+        <div id="doc-content" class="demo__doc-content"></div>
+      </div>
+
+      <!-- Reset -->
+      <div id="reset-section" class="demo__reset">
+        <button id="reset-demo" class="btn btn--secondary">
+          See Another Scenario
+        </button>
+      </div>
+    `;
+    
+    // Re-cache all elements
+    this.elements = {
+      micButton: this.container.querySelector('#mic-button'),
+      voiceSection: this.container.querySelector('#voice-input-section'),
+      splitView: this.container.querySelector('#split-view-section'),
+      typingContent: this.container.querySelector('#typical-notes'),
+      speechContent: this.container.querySelector('#transcript-text'),
+      processingArea: this.container.querySelector('.demo__processing-area'),
+      voiceBars: this.container.querySelectorAll('.voice-bar'),
+      docOutput: this.container.querySelector('#doc-output'),
+      docContent: this.container.querySelector('#doc-content'),
+      resetSection: this.container.querySelector('#reset-section'),
+      resetButton: this.container.querySelector('#reset-demo'),
+      understandingColumn: this.container.querySelector('.demo__understanding-column')
+    };
+  }
+  
+  /**
+   * Start next scenario with clean state transition
+   */
+  startNextScenario() {
+    // Update scenario index
     this.state.currentScenarioIndex = (this.state.currentScenarioIndex + 1) % DEMO_SCENARIOS.length;
     this.state.currentFeature = 0;
     this.state.hasClosedTicketOverlay = false;
-    this.state.isRunning = false; // Ensure we can start immediately
     
-    // Remove any existing scenarios prompt
-    const existingPrompt = this.container.querySelector('.scenarios-prompt');
-    if (existingPrompt) {
-      existingPrompt.remove();
+    // Fade out scenarios prompt
+    const scenariosPrompt = this.container.querySelector('.scenarios-prompt');
+    if (scenariosPrompt) {
+      scenariosPrompt.style.transition = 'opacity 0.4s ease-out';
+      scenariosPrompt.style.opacity = '0';
+      
+      setTimeout(() => {
+        // Rebuild demo structure
+        this.rebuildDemoStructure();
+        
+        // Remove collapsed class and restore full size
+        this.container.classList.remove('demo__container--collapsed');
+        this.container.classList.remove('is-compact');
+        
+        // Hide voice section (skip mic button)
+        this.elements.voiceSection.style.display = 'none';
+        this.elements.splitView.classList.add('is-visible');
+        
+        // Start animation directly
+        this.state.isRunning = true;
+        const scenario = DEMO_SCENARIOS[this.state.currentScenarioIndex];
+        this.runTicketClosureWorkflow(scenario);
+      }, 400);
     }
-    
-    // Clean reset immediately (no smooth animation needed)
-    this.elements.splitView.classList.remove('is-visible');
-    this.elements.splitView.style.opacity = '';
-    this.elements.splitView.style.transform = '';
-    this.elements.splitView.style.display = '';
-    this.elements.docOutput.classList.remove('is-visible');
-    this.elements.docOutput.style.opacity = '';
-    this.elements.docOutput.style.transform = '';
-    this.elements.docOutput.style.display = '';
-    this.elements.resetSection.classList.remove('is-visible');
-    this.elements.resetSection.style.display = 'none';
-    
-    // Clear content
-    this.elements.typingContent.innerHTML = '<span class="demo__cursor">|</span>';
-    this.elements.speechContent.innerHTML = '';
-    this.elements.docContent.innerHTML = '';
-    
-    // Remove trackers
-    const tracker = document.querySelector('.intelligent-tracker');
-    if (tracker) tracker.remove();
-    
-    // Reset processing
-    this.elements.processingArea.style.opacity = '1';
-    this.elements.processingArea.querySelector('.demo__processing-text').textContent = 'Cyft listening to debrief...';
-    
-    // Hide voice section (we won't show it to user)
-    this.elements.voiceSection.style.display = 'none';
-    this.elements.voiceSection.style.opacity = '0';
-    
-    // Immediately start the next scenario without user interaction
-    setTimeout(() => {
-      this.start();
-    }, 200);
   }
-
+  
   reset() {
     // Next scenario
     this.state.currentScenarioIndex = (this.state.currentScenarioIndex + 1) % DEMO_SCENARIOS.length;
     this.state.currentFeature = 0;
-    this.state.hasClosedTicketOverlay = false; // Reset for new scenario
+    this.state.hasClosedTicketOverlay = false;
     
-    // Remove any existing scenarios prompt
-    const existingPrompt = this.container.querySelector('.scenarios-prompt');
-    if (existingPrompt) {
-      existingPrompt.remove();
-    }
-    
-    // Smooth reset
+    // Fade out current content
     this.elements.splitView.style.transition = 'opacity 0.4s ease-out';
     this.elements.splitView.style.opacity = '0';
     
     setTimeout(() => {
-      // Clean reset
-      this.elements.splitView.classList.remove('is-visible');
-      this.elements.splitView.style.opacity = '';
-      this.elements.splitView.style.transform = '';
-      this.elements.splitView.style.display = '';
-      this.elements.docOutput.classList.remove('is-visible');
-      this.elements.docOutput.style.opacity = '';
-      this.elements.docOutput.style.transform = '';
-      this.elements.docOutput.style.display = '';
-      this.elements.resetSection.classList.remove('is-visible');
-      this.elements.resetSection.style.display = 'none'; // Hide until overlay is closed
+      // Reset to idle state
+      this.container.classList.add('is-compact');
       
       // Clear content
+      this.elements.splitView.classList.remove('is-visible');
+      this.elements.docOutput.classList.remove('is-visible');
+      this.elements.resetSection.classList.remove('is-visible');
+      this.elements.resetSection.style.display = 'none';
+      
       this.elements.typingContent.innerHTML = '<span class="demo__cursor">|</span>';
       this.elements.speechContent.innerHTML = '';
       this.elements.docContent.innerHTML = '';
@@ -1028,10 +1119,6 @@ export class InteractiveDemo {
       const tracker = document.querySelector('.intelligent-tracker');
       if (tracker) tracker.remove();
       
-      // Reset processing
-      this.elements.processingArea.style.opacity = '1';
-      this.elements.processingArea.querySelector('.demo__processing-text').textContent = 'Cyft listening to debrief...';
-      
       // Show voice section
       this.elements.voiceSection.style.display = 'flex';
       this.elements.voiceSection.style.opacity = '0';
@@ -1039,11 +1126,6 @@ export class InteractiveDemo {
       requestAnimationFrame(() => {
         this.elements.voiceSection.style.transition = 'opacity 0.4s ease-out';
         this.elements.voiceSection.style.opacity = '1';
-        
-        // Restore compact state after voice section is visible
-        setTimeout(() => {
-          this.container.classList.add('is-compact');
-        }, 300);
       });
     }, 400);
   }
@@ -1056,4 +1138,4 @@ export class InteractiveDemo {
 // Export factory function
 export const createInteractiveDemo = (containerId) => {
   return new InteractiveDemo(containerId);
-}; 
+};

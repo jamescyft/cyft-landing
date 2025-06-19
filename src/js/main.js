@@ -20,7 +20,6 @@ import { createResourceHints } from './modules/resource-hints.js';
 import { createScrollAnimations } from './modules/scroll-animations.js';
 import { createSectionRevealer } from './modules/section-revealer.js';
 import { createVideoLoader } from './modules/video-loader.js';
-import { resilience } from './utils/network-resilience.js';
 
 /**
  * Application Class

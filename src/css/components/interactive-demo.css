@@ -11,6 +11,11 @@
   padding: 0 20px;
 }
 
+/* ==========================================================================
+   Interactive Demo Container States - Single Source of Truth
+   ========================================================================== */
+
+/* Base container - no explicit height, grows with content */
 .demo__container {
   background: linear-gradient(to bottom, #FFF 0%, #FAFAFA 100%);
   border-radius: 24px;
@@ -23,10 +28,35 @@
   transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Container starts smaller */
+/* State 1: Idle (Mic Button) - Compact */
 .demo__container.is-compact {
   max-width: 600px;
   margin: 0 auto;
+}
+
+/* State 2: Playing Animation - Full Width */
+.demo__container:not(.is-compact):not(.demo__container--collapsed) {
+  max-width: 100%;
+}
+
+/* State 3: Scenarios Prompt - Collapsed Height */
+.demo__container.demo__container--collapsed {
+  min-height: 400px !important; /* Force specific height for scenarios prompt */
+  max-height: 400px !important;
+  height: 400px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Ensure content doesn't affect collapsed container */
+.demo__container.demo__container--collapsed > * {
+  display: none !important;
+}
+
+.demo__container.demo__container--collapsed > .scenarios-prompt {
+  display: flex !important;
 }
 
 /* Subtle gradient overlay */
@@ -2318,4 +2348,75 @@
   .internal-section .section-content.technical {
     font-size: 10px;
   }
+}
+
+/* Visibility states - FIX: Ensure elements display when is-visible class is added */
+.demo__split-view.is-visible,
+.demo__doc-output.is-visible,
+.demo__reset.is-visible {
+  display: block !important;
+}
+
+/* SCENARIO PROMPT COLLAPSED STATE - Forces container to shrink */
+.demo__container.demo--idle {
+  /* Idle state: compact with mic button */
+  max-width: 600px;
+  margin: 0 auto;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.demo__container.demo--playing {
+  /* Playing state: full size for animation */
+  max-width: 100%;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.demo__container.demo--complete {
+  /* Complete state: full size for documentation */
+  max-width: 100%;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.demo__container.demo--scenarios-prompt {
+  /* Scenarios prompt state: collapsed height */
+  max-width: 100%;
+  min-height: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Ensure scenarios prompt displays correctly in its state */
+.demo__container.demo--scenarios-prompt .scenarios-prompt {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix for the giant white space gap */
+.section--gradient.section--no-v-align {
+  align-items: flex-start !important;
+  padding-top: 8vh !important; /* Adjust to roughly match original spacing */
+  transition: align-items 0.4s ease, padding-top 0.4s ease;
+}
+
+
+
+/* Debug mode - Remove in production */
+.demo__container[data-debug="true"] {
+  outline: 3px dashed red;
+  position: relative;
+}
+
+.demo__container[data-debug="true"]::after {
+  content: attr(data-state) " | Height: " attr(data-height);
+  position: absolute;
+  top: -30px;
+  left: 10px;
+  background: #ff0000;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: monospace;
+  z-index: 9999;
 } 

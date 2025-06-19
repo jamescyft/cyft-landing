@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Demo - Visual Testing</title>
+    <link rel="stylesheet" href="../src/css/main.css">
+    <style>
+        body {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10000;
+        }
+        
+        .test-controls h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+        }
+        
+        .test-controls button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px 12px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .test-controls button:hover {
+            background: #0051D5;
+        }
+        
+        .height-monitor {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .height-monitor div {
+            margin: 5px 0;
+        }
+        
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .test-section h2 {
+            margin: 0 0 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-controls">
+        <h3>Interactive Demo Testing</h3>
+        <button onclick="testIdle()">Test Idle State</button>
+        <button onclick="testPlaying()">Test Playing State</button>
+        <button onclick="testScenariosPrompt()">Test Scenarios Prompt</button>
+        <button onclick="testFullCycle()">Test Full Cycle</button>
+        <button onclick="toggleDebug()">Toggle Debug Mode</button>
+        
+        <div class="height-monitor">
+            <div>Container Height: <span id="height">-</span></div>
+            <div>State: <span id="state">-</span></div>
+            <div>Classes: <span id="classes">-</span></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Interactive Demo Test Bed</h2>
+        <p>Use the controls on the right to test different states and monitor container behavior.</p>
+    </div>
+    
+    <!-- Demo container -->
+    <section class="section section--gradient">
+        <div class="demo">
+            <div id="demo-container" class="demo__container">
+                <!-- Content will be dynamically added -->
+            </div>
+        </div>
+    </section>
+    
+    <div class="test-section">
+        <h2>Expected Behavior</h2>
+        <ul>
+            <li><strong>Idle State:</strong> Container should be compact (600px max-width)</li>
+            <li><strong>Playing State:</strong> Container should be full width</li>
+            <li><strong>Scenarios Prompt:</strong> Container should be exactly 400px height</li>
+            <li><strong>Transitions:</strong> Should be smooth with no jumping</li>
+        </ul>
+    </div>
+    
+    <script type="module">
+        import { createInteractiveDemo } from '../src/js/modules/interactive-demo.js';
+        
+        let demo = createInteractiveDemo('#demo-container');
+        let debugEnabled = false;
+        
+        // Height monitoring
+        function updateMonitor() {
+            const container = document.querySelector('.demo__container');
+            if (container) {
+                document.getElementById('height').textContent = container.offsetHeight + 'px';
+                document.getElementById('state').textContent = container.getAttribute('data-state') || 'none';
+                document.getElementById('classes').textContent = container.className;
+            }
+        }
+        
+        // Monitor height changes
+        const observer = new ResizeObserver(updateMonitor);
+        observer.observe(document.querySelector('.demo__container'));
+        
+        // Test functions
+        window.testIdle = function() {
+            location.reload();
+        };
+        
+        window.testPlaying = function() {
+            demo.start();
+        };
+        
+        window.testScenariosPrompt = function() {
+            demo.showCleanScenariosTransition();
+        };
+        
+        window.testFullCycle = async function() {
+            // Start demo
+            demo.start();
+            
+            // Wait for completion
+            setTimeout(() => {
+                // Trigger scenarios prompt
+                demo.showCleanScenariosTransition();
+            }, 5000);
+        };
+        
+        window.toggleDebug = function() {
+            debugEnabled = !debugEnabled;
+            if (debugEnabled) {
+                demo.enableDebugMode();
+            } else {
+                const container = document.querySelector('.demo__container');
+                container.removeAttribute('data-debug');
+            }
+        };
+        
+        // Initial monitor update
+        updateMonitor();
+    </script>
+</body>
+</html> 
