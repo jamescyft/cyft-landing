@@ -289,7 +289,7 @@ HTML text was showing incorrectly during rendering on Chromium-based browsers.
 3. **Progressive enhancement** - Content visible by default, animations enhance
 
 ### Testing
-1. Open `test-chrome-rendering.html` in Chrome/Edge
+1. Open `tests/test-chrome-rendering.html` in Chrome/Edge
 2. Run all tests - they should pass
 3. Check main site with Chrome DevTools:
    - Network throttled to "Slow 3G"

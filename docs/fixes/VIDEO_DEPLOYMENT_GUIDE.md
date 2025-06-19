@@ -8,7 +8,7 @@ The 14MB hero video (`Drops of Water Ripples.mp4`) is in `.gitignore` and won't 
 ### Option 1: Compress Video for Git (RECOMMENDED)
 ```bash
 # 1. Make compression script executable
-chmod +x compress-video.sh
+chmod +x scripts/compress-video.sh
 
 # 2. Install ffmpeg if needed
 brew install ffmpeg  # macOS
@@ -16,7 +16,7 @@ brew install ffmpeg  # macOS
 sudo apt-get install ffmpeg  # Linux
 
 # 3. Run compression
-./compress-video.sh
+./scripts/compress-video.sh
 
 # 4. Check compressed size
 ls -lh public/assets/videos/hero-video-compressed.mp4

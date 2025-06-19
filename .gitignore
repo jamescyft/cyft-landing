@@ -111,5 +111,5 @@ public/assets/videos/*.webm
 public/assets/videos/*.mkv
 
 # Utility scripts
-compress-video.sh
-check-video-status.sh 
+scripts/compress-video.sh
+scripts/check-video-status.sh 

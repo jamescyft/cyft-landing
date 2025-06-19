@@ -498,6 +498,19 @@ a {
   display: none;
 }
 
+/* Fix: Add styles to show elements when is-visible class is added */
+.demo__split-view.is-visible {
+  display: block !important;
+}
+
+.demo__doc-output.is-visible {
+  display: block !important;
+}
+
+.demo__reset.is-visible {
+  display: block !important;
+}
+
 /* Section Variants */
 .section--gradient {
   background: linear-gradient(to bottom, var(--color-bg-primary) 0%, var(--color-white-pure) 100%);
@@ -537,8 +550,9 @@ a {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-left: clamp(2rem, 8vw, 6rem);
-  max-width: calc(100% - clamp(4rem, 16vw, 12rem));
+  margin-left: 0;
+  max-width: 100%;
+  padding-left: 10%;
 }
 
 .reveal__whisper {
@@ -561,7 +575,7 @@ a {
   color: var(--color-black-pure);
   font-family: var(--font-display);
   display: inline-block;
-  margin-left: clamp(1rem, 3vw, 2rem);
+  margin-left: 0;
 }
 
 .reveal__truth {
@@ -569,8 +583,9 @@ a {
   flex-direction: column;
   gap: var(--space-2);
   align-items: flex-start;
-  margin-left: clamp(2rem, 8vw, 6rem);
-  max-width: calc(100% - clamp(4rem, 16vw, 12rem));
+  margin-left: 0;
+  max-width: 100%;
+  padding-left: 10%;
 }
 
 .reveal__truth-line {
@@ -645,6 +660,28 @@ a {
   top: 6px;
 }
 
+/* Animation Overrides - Prevent horizontal shifts from interfering with layout */
+.reveal__sequence .a-whisper-in,
+.reveal__sequence .a-word-reveal {
+  transform: none !important;
+}
+
+.reveal__truth .a-truth-reveal {
+  transform: none !important;
+}
+
+/* Keep opacity animations working */
+@keyframes fadeInOpacityOnly {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.reveal__sequence .a-whisper-in,
+.reveal__sequence .a-word-reveal,
+.reveal__truth .a-truth-reveal {
+  animation-name: fadeInOpacityOnly !important;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .hero__content {
@@ -664,18 +701,16 @@ a {
   }
   
   .reveal__sequence {
-    margin-left: clamp(1rem, 4vw, 2rem);
-    max-width: calc(100% - clamp(2rem, 8vw, 4rem));
+    padding-left: 5%;
   }
   
   .reveal__word {
     font-size: clamp(4rem, 20vw, 7rem);
-    margin-left: clamp(0.5rem, 2vw, 1rem);
+    margin-left: 0;
   }
   
   .reveal__truth {
-    margin-left: clamp(1rem, 4vw, 2rem);
-    max-width: calc(100% - clamp(2rem, 8vw, 4rem));
+    padding-left: 5%;
   }
 }
     </style>
@@ -803,6 +838,8 @@ a {
             <div class="section__content">
                 <div class="u-align-center u-mb-9">
                     <h2 class="u-text-statement">Watch it happen</h2>
+                    <!-- Slot for scenarios prompt -->
+                    <div id="scenarios-slot"></div>
                 </div>
 
                 <!-- Interactive Demo Component -->

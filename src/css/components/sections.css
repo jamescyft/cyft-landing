@@ -178,9 +178,10 @@
   flex-direction: column;
   align-items: flex-start;
   
-  /* Position slightly left of center */
-  margin-left: clamp(2rem, 8vw, 6rem);
-  max-width: calc(100% - clamp(4rem, 16vw, 12rem));
+  /* Simple left alignment */
+  margin-left: 0;
+  max-width: 100%;
+  padding-left: 10%;
 }
 
 .reveal__whisper {
@@ -206,8 +207,8 @@
   font-family: var(--font-display);
   display: inline-block;
   
-  /* Slightly offset from whisper for visual interest */
-  margin-left: clamp(1rem, 3vw, 2rem);
+  /* Aligned with whisper text above */
+  margin-left: 0;
 }
 
 .reveal__truth {
@@ -216,9 +217,10 @@
   gap: var(--space-2);
   align-items: flex-start;
   
-  /* Align with the sequence for narrative flow */
-  margin-left: clamp(2rem, 8vw, 6rem);
-  max-width: calc(100% - clamp(4rem, 16vw, 12rem));
+  /* Simple left alignment */
+  margin-left: 0;
+  max-width: 100%;
+  padding-left: 10%;
 }
 
 .reveal__truth-line {
@@ -308,9 +310,8 @@
   }
   
   .reveal__sequence {
-    /* Reduce offset on mobile for better readability */
-    margin-left: clamp(1rem, 4vw, 2rem);
-    max-width: calc(100% - clamp(2rem, 8vw, 4rem));
+    /* Simple mobile alignment */
+    padding-left: 5%;
   }
   
   .reveal__whisper {
@@ -320,14 +321,13 @@
   
   .reveal__word {
     font-size: clamp(4rem, 20vw, 7rem);
-    /* Reduce offset on mobile */
-    margin-left: clamp(0.5rem, 2vw, 1rem);
+    /* No offset on mobile */
+    margin-left: 0;
   }
   
   .reveal__truth {
-    /* Match sequence alignment on mobile */
-    margin-left: clamp(1rem, 4vw, 2rem);
-    max-width: calc(100% - clamp(2rem, 8vw, 4rem));
+    /* Simple mobile alignment */
+    padding-left: 5%;
   }
 }
 

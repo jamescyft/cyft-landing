@@ -68,7 +68,7 @@ brew install ffmpeg
 
 ### After installing ffmpeg:
 ```bash
-./compress-video.sh
+./scripts/compress-video.sh
 ```
 
 ## 🎯 MY OCD RECOMMENDATION:

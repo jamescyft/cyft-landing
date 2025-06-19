@@ -6,8 +6,8 @@ node_modules/
 
 # Shell scripts
 *.sh
-check-video-status.sh
-compress-video.sh
+scripts/check-video-status.sh
+scripts/compress-video.sh
 
 # Documentation (except README)
 DEPLOYMENT_READY.md
