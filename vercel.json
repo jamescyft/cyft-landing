@@ -6,7 +6,7 @@
   "framework": null,
   "env": {
     "FORCE_REBUILD": "1",
-    "BUILD_TIMESTAMP": "2024-12-18-comprehensive-fix"
+    "BUILD_TIMESTAMP": "2024-12-19-interactive-demo-fix"
   },
   "headers": [
     {
