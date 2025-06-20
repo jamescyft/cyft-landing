@@ -123,6 +123,12 @@ export class InteractiveDemo {
     };
     
     this.init();
+    
+    // DEV-only: expose the live instance for debugging regardless of build mode
+    // This makes it easy to inspect via
+    //   document.querySelector('#demo-container').___interactiveDemoInstance
+    // without relying on ENV.isDev or global hooks.
+    this.container.___interactiveDemoInstance = this;
   }
   
   /**
